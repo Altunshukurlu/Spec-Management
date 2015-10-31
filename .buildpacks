@@ -1,4 +1,3 @@
-https://github.com/heroku/heroku-buildpack-ruby
-https://github.com/Label305-Forks/heroku-buildpack-nodejs-sass.git
-https://github.com/heroku/heroku-buildpack-nodejs#v63
+https://github.com/Label305-Forks/heroku-buildpack-nodejs-sass
+https://github.com/heroku/heroku-buildpack-nodejs
 
