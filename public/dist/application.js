@@ -123,6 +123,11 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('spec');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
@@ -781,6 +786,50 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
       if (this.socket) {
         this.socket.removeListener(eventName);
       }
+    };
+  }
+]);
+
+'use strict';
+
+// Configuring the Chat module
+angular.module('spec').run(['Menus',
+  function (Menus) {
+    // Set top bar menu items
+    Menus.addMenuItem('topbar', {
+      title: 'Spec',
+      state: 'spec'
+    });
+  }
+]);
+
+'use strict';
+
+// Configure the 'chat' module routes
+angular.module('spec').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('spec', {
+        url: '/spec',
+        templateUrl: 'modules/spec/client/views/chat.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      });
+  }
+]);
+
+'use strict';
+
+// Create the 'chat' controller
+angular.module('spec').controller('SpecController', ['$scope',
+  function ($scope) {
+    //////////////////////The Spec Part//////////////////////
+    $scope.propertyName = 'Resilience';
+
+    $scope.sendPName = function(){
+      $scope.propertyName = this.pName;
+      this.pName = '';
     };
   }
 ]);
