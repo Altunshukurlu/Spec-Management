@@ -4,10 +4,10 @@
 angular.module('spec').controller('SpecController', ['$scope',
   function ($scope) {
     //////////////////////The Spec Part//////////////////////
-    $scope.propertyName = 'Resilience';
+    $scope.propertyList = ['Resilience'];
 
     $scope.sendPName = function(){
-      $scope.propertyName = this.pName;
+      $scope.propertyList.push(this.pName);
       this.pName = '';
     };
   }

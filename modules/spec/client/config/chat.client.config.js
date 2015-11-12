@@ -6,7 +6,8 @@ angular.module('spec').run(['Menus',
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
       title: 'Spec',
-      state: 'spec'
+      state: 'spec',
+      roles:['*']
     });
   }
 ]);

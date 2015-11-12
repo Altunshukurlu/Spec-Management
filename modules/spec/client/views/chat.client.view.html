@@ -7,7 +7,8 @@
       <p><input type="text" id="pName" name="pName" ng-model="pName"/>
           <input type="submit" id="submitBtn" class="btn btn-primary" value="Submit"/>
       </p>
-      <p>Property name: <strong>{{propertyName}}<strong></p>
+      <p>Properties:</p>
+      <p ng-repeat="property in propertyList"><strong>{{property}}<strong></p>
   </form>
   <!-- The message form 
   <form class="col-xs-12 col-md-offset-4 col-md-4" ng-submit="sendMessage();">

@@ -6,10 +6,10 @@ angular.module('spec').config(['$stateProvider',
     $stateProvider
       .state('spec', {
         url: '/spec',
-        templateUrl: 'modules/spec/client/views/chat.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        templateUrl: 'modules/spec/client/views/chat.client.view.html'//,
+        //data: {
+        //  roles: ['*']
+        //}
       });
   }
 ]);

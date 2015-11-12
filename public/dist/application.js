@@ -798,7 +798,8 @@ angular.module('spec').run(['Menus',
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
       title: 'Spec',
-      state: 'spec'
+      state: 'spec',
+      roles:['*']
     });
   }
 ]);
@@ -811,10 +812,10 @@ angular.module('spec').config(['$stateProvider',
     $stateProvider
       .state('spec', {
         url: '/spec',
-        templateUrl: 'modules/spec/client/views/chat.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        templateUrl: 'modules/spec/client/views/chat.client.view.html'//,
+        //data: {
+        //  roles: ['*']
+        //}
       });
   }
 ]);
@@ -825,10 +826,10 @@ angular.module('spec').config(['$stateProvider',
 angular.module('spec').controller('SpecController', ['$scope',
   function ($scope) {
     //////////////////////The Spec Part//////////////////////
-    $scope.propertyName = 'Resilience';
+    $scope.propertyList = ['Resilience'];
 
     $scope.sendPName = function(){
-      $scope.propertyName = this.pName;
+      $scope.propertyList.push(this.pName);
       this.pName = '';
     };
   }
