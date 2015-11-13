@@ -14,8 +14,7 @@ Key shortcomings of work of this kind include (1) overfocus on safety
 and dependability properties to the exclusion of many other properties
 that are important for producing systems of value to stakeholders; (2)
 inadequate support for system and assurance case evolution; (3) lack
-of flexibility, e.g., pluggable inference rules; (4) modern approaches
-to tool support; (5) fairly narrow range of expressiveness in notation
+of flexibility, e.g., pluggable inference rules; (4) no disributed tool support; (5) fairly narrow range of expressiveness in notation
 (essentially and-trees).
 
 # New Approach and Why We Think It Will Work
@@ -43,7 +42,7 @@ so-called MEAN Stack---Mongo DB, Express, Angular, and Node.js---as
 a platform for building highly interactive, responsive, and functional
 web-based tools.
 
-Fifth, ...
+Fifth, we will support broad range of expressiveness other than and-trees.
 
 We believe this approach will work for several reasons. First, it will
 address today's tendency to over-focus on, and over-optimize
