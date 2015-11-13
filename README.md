@@ -1,0 +1,1 @@
+The aim of this project is to develop and evaluate a new approach to stating, managing, evolving, and making evidence-supported judgements about claims (propositions) concerning the full range of functional and non-functional properties of software-intensive, cyber-physical-human (CPH) systems.
