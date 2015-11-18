@@ -1,29 +1,36 @@
 # Goal
 
 The aim of this project is to develop and evaluate a new approach to
-system assurance: one that will enable engineers and decision makers
-to manage complex systems projects for stakeholder value.
+system assurance: a modular approach, inspired by logic, one that is
+meant to enable management of complex projects for stakeholder value.
 
-# State of the Art and its Shortcomings
+# State of the Art
 
-Major related efforts are ongoing in the area of safety and
-dependability assurance cases. These efforts include work by Rushby,
-Leveson, Knight, GSN, CAE, etc.
+Related efforts are ongoing in the area of safety and dependability
+assurance cases. They include work by Rushby, Leveson, Knight, GSN,
+CAE, etc. [citations needed]
 
-Key shortcomings of work of this kind include (1) overfocus on safety
-and dependability properties to the exclusion of many other properties
-that are important for producing systems of value to stakeholders; (2)
-inadequate support for system and assurance case evolution; (3) lack
-of flexibility, e.g., pluggable inference rules; (4) no disributed tool support; (5) fairly narrow range of expressiveness in notation
-(essentially and-trees).
+# Shortcomings in the State of the Art
+
+Shortcomings in the current state of the art nclude
+
+* overfocus on dependability properties to the exclusion of others
+  important in producing systems that stakeholders value
+* constrained expressiveness of claims language (basically and-trees)
+* inadequate support for system and assurance case evolution
+* lack of flexibility, e.g., pluggable inference rules
+* old-fashioned tools
 
 # New Approach and Why We Think It Will Work
 
-First, we're going to provide a system that will enable engineers and
-decision makers to state, manage, evolve, and make evidence-supported
-judgements about system _value_ claims. System safety is just one of
-many properties that contribute to system value. We will take Boehm
-and Sullivan's formal _ility_ ontology as a starting point.
+We propose to develop and evaluate a system that will enable people to
+state, manage, and evolve /propositions/ (formerly /claims/), to
+gather /evidence/, and to make or compute /judgements/ about such
+propositions.
+
+System safety is just one of many properties that contribute to system
+value. We will take Boehm and Sullivan's formal _ility_ ontology as a
+starting point.
 
 Second, we will will replace the _and-trees_ of traditional safety
 assurance clases with far more expressive notations modeled on the
