@@ -123,6 +123,11 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('propositions');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('spec');
 
 'use strict';
@@ -787,6 +792,166 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
         this.socket.removeListener(eventName);
       }
     };
+  }
+]);
+
+'use strict';
+
+// Configuring the Articles module
+angular.module('propositions').run(['Menus',
+  function (Menus) {
+    // Add the articles dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Requirements',
+      state: 'requirements',
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    Menus.addSubMenuItem('topbar', 'requirements', {
+      title: 'Propositions',
+      state: 'requirements.propositions'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'requirements', {
+      title: 'Things',
+      state: 'requirements.things'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('propositions').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('requirements', {
+        abstract: true,
+        url: '/requirements',
+        template: '<ui-view/>'
+      })
+      .state('requirements.propositions', {
+        url: '/propositions',
+        templateUrl: 'modules/requirements/client/views/list-proposition.client.view.html'
+      })
+      .state('requirements.propositionscreate', {
+        url: '/propositions/create',
+        templateUrl: 'modules/requirements/client/views/create-proposition.client.view.html'
+      })
+      .state('requirements.propositionsview', {
+        url: '/propositions/:articleId',
+        templateUrl: 'modules/requirements/client/views/view-proposition.client.view.html'
+      })
+      .state('requirements.propositionsedit', {
+        url: '/propositions/:articleId/edit',
+        templateUrl: 'modules/requirements/client/views/edit-proposition.client.view.html',
+      })
+      .state('requirements.things', {
+        url: '/things',
+        templateUrl: 'modules/requirements/client/views/list-thing.client.view.html'
+      });
+  }
+]);
+
+'use strict';
+
+// Articles controller
+angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions',
+  function ($scope, $stateParams, $location, Authentication, Propositions) {
+    $scope.authentication = Authentication;
+
+    // Create new Article
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'articleForm');
+
+        return false;
+      }
+
+      // Create new Article object
+      var article = new Propositions({
+        title: this.title,
+        content: this.content
+      });
+
+      // Redirect after save
+      article.$save(function (response) {
+        $location.path('requirements/propositions/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.content = '';
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing Article
+    $scope.remove = function (article) {
+      if (article) {
+        article.$remove();
+
+        for (var i in $scope.articles) {
+          if ($scope.articles[i] === article) {
+            $scope.articles.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.article.$remove(function () {
+          $location.path('requirements/propositions');
+        });
+      }
+    };
+
+    // Update existing Article
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'articleForm');
+
+        return false;
+      }
+
+      var article = $scope.article;
+
+      article.$update(function () {
+        $location.path('requirements/propositions/' + article._id);
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Articles
+    $scope.find = function () {
+      $scope.articles = Propositions.query();
+    };
+
+    // Find existing Article
+    $scope.findOne = function () {
+      $scope.article = Propositions.get({
+        propId: $stateParams.articleId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Articles service used for communicating with the articles REST endpoints
+angular.module('propositions').factory('Propositions', ['$resource',
+  function ($resource) {
+    return $resource('api/propositions/:propId', {
+      propId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 ]);
 
