@@ -1,3 +1,16 @@
+# Overview
+
+Authors: Graduate Students and Kevin Sullivan, "A Constructive Logic
+Approach to System Value Assurance: Concepts, Methods, and Tools,"
+University of Virginia Department of Computer Science, Working Paper,
+2015.
+
+This repository contains a working paper and associated software
+artifact by Kevin Sullivan and several University of Virginia Computer
+Science graduate students. Copyright is held by the authors. Comments
+and collaborations are welcome. Contact sullivan _at_ virginia.edu for
+more information.
+
 # Goal
 
 The aim of this project is to develop and evaluate a new approach to
