@@ -36,7 +36,7 @@ Shortcomings in the current state of the art nclude
 
 # New Approach 
 
-We propose to develop and evaluate a method and a system that will
+We propose  a method and a system that will
 enable engineers and decision makers to
 * manage and evolve representations of systems and the components,
 environments, and stakeholders as the real-world subject matter to
