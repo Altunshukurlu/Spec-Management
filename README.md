@@ -21,16 +21,31 @@ Shortcomings in the current state of the art nclude
 * lack of flexibility, e.g., pluggable inference rules
 * old-fashioned tools
 
-# New Approach and Why We Think It Will Work
+# New Approach 
 
-We propose to develop and evaluate a system that will enable people to
-state, manage, and evolve /propositions/ (formerly /claims/), to
-gather /evidence/, and to make or compute /judgements/ about such
-propositions.
+We propose to develop and evaluate a method and a system that will
+enable engineers and decision makers to
+* employ concepts from constructive logic to build propositions
+about systems and their components, environments, and stakeholders
+* manage, evaluate, and evolve databases of such propositions
+* support multiple interpretations of propositions, from assumptions
+to requirements that are intended to be satisifed by future actions
+*  manage, understand, and evaluate diverse forms of evidence
+related to propositions
+* support diverse inference rules and methods for deriving judgments
+  about propositions from evidence
+* compute, manage and evolve judgements about such propositions
+* support modular packaging of systems/components and associated value
+assurance cases
+* support compositional construction of larger systems and assurance
+  arguments from component modules
 
-System safety is just one of many properties that contribute to system
-value. We will take Boehm and Sullivan's formal _ility_ ontology as a
-starting point.
+# What's New?
+
+First, system safety is just one of many properties that contribute to
+system value. We will take the Boehm/Sullivan formal _ility_ ontology
+as a starting point with the intent to replace safety or dependability
+with value as the top level proposition in assurance cases.
 
 Second, we will will replace the _and-trees_ of traditional safety
 assurance clases with far more expressive notations modeled on the
@@ -51,6 +66,8 @@ web-based tools.
 
 Fifth, we will support broad range of expressiveness other than and-trees.
 
+# Why Do We Think It Will Work?
+
 We believe this approach will work for several reasons. First, it will
 address today's tendency to over-focus on, and over-optimize
 individual system properties, such as security or safety, at the
@@ -59,3 +76,8 @@ ultimately depends. It's our view that systems engineering of complex
 software-intensive CPH systems requires a far more complex balancing
 of a far broader range of system properties.
 
+# Who Will Care
+
+# How Will We Know We're Succeeding?
+
+# What are the Intermediate and Final Exams?
