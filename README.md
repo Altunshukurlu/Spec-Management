@@ -25,8 +25,14 @@ Shortcomings in the current state of the art nclude
 
 We propose to develop and evaluate a method and a system that will
 enable engineers and decision makers to
+* manage and evolve representations of systems and the components,
+environments, and stakeholders as the real-world subject matter to
+which propositions (discussed next) refer
 * employ concepts from constructive logic to build propositions
 about systems and their components, environments, and stakeholders
+* in particular, provide an extensible set of proposition
+constructors, including the usual connectives of higher-order
+predicate logic
 * manage, evaluate, and evolve databases of such propositions
 * support multiple interpretations of propositions, from assumptions
 to requirements that are intended to be satisifed by future actions
