@@ -14,8 +14,14 @@ more information.
 # Goal
 
 The aim of this project is to develop and evaluate a new approach to
-system assurance: a modular approach, inspired by logic, one that is
-meant to enable management of complex projects for stakeholder value.
+system assurance: a modular approach, taking constructive logic as an
+organizing principal but replacing formal proof structures with more
+diverse forms of evidence, and logical judgements based on proofs with
+engineering judgments based on such evidence, to improve management of
+complex projects for stakeholder value. The approach is meant at least
+partly subsume dependability/safety properties and assurance as just
+one of multiple properties that ultimately contribute to system value
+and stakeholder satisfaction.
 
 # State of the Art
 
@@ -23,22 +29,40 @@ Related efforts are ongoing in the area of safety and dependability
 assurance cases. They include work by Rushby, Leveson, Knight, GSN,
 CAE, etc. [citations needed]
 
+## Arguments/Assurance
+### Rushby: Hybrid Inductive/Deductive Reasoning
+### Leveson: Socio-Technical Control Loops for Maintaining Properties
+### GSN
+### CAE
+## Properties
+### Boehm/Sullivan -- ility hierarchy
+### Knight/Strunk/Sullivan -- survivability
+### 
+
+
+
 # Shortcomings in the State of the Art
 
-Shortcomings in the current state of the art nclude
+Shortcomings in the current state of the art include
 
-* overfocus on dependability properties to the exclusion of others
-  important in producing systems that stakeholders value
-* constrained expressiveness of claims language (basically and-trees)
+* lack of a satisfactory, practical, useful, theoretically defensible,
+validated method for making judgments about validity of propositions
+based on informal, incomplete, imperfect evidence
+* overfocus on dependability properties to the exclusion of other
+properties that are also critical in producing systems of value to
+diverse stakeholders (e.g., Torvalds criticism of security zealots)
+* inadequate expressiveness of claims language (basically and-trees,
+  Horn clauses)
 * inadequate support for system and assurance case evolution
-* lack of flexibility, e.g., pluggable inference rules
-* old-fashioned tools
+* lack of flexibility, e.g., with respect to "pluggable" inference
+  rules
+* old-fashioned tools, e.g., desktop software based on Eclipse
 
 # New Approach 
 
-We propose  a method and a system that will
-enable engineers and decision makers to
-* manage and evolve representations of systems and the components,
+We propose a method and a system that will enable engineers and
+decision makers to
+* manage and evolve representations of systems and their components,
 environments, and stakeholders as the real-world subject matter to
 which propositions (discussed next) refer
 * employ concepts from constructive logic to build propositions
@@ -85,6 +109,11 @@ web-based tools.
 
 Fifth, we will support broad range of expressiveness other than and-trees.
 
+# What Claims Do We Make for this Approach
+
+* list them
+* here
+
 # Why Do We Think It Will Work?
 
 We believe this approach will work for several reasons. First, it will
@@ -96,6 +125,11 @@ software-intensive CPH systems requires a far more complex balancing
 of a far broader range of system properties.
 
 # Who Will Care
+
+We expect this work to be of interest to both the broader systems
+engineering community and to the software engineering community, with
+particular relevance to those working in areas of system requirements,
+assurance cases, proof engineering,
 
 # How Will We Know We're Succeeding?
 
