@@ -1,7 +1,7 @@
 'use strict';
 
 // Articles controller
-angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions',
+angular.module('propositions').controller('EvidenceController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions',
   function ($scope, $stateParams, $location, Authentication, Propositions) {
     $scope.authentication = Authentication;
 
