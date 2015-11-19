@@ -19,7 +19,7 @@
   </div>
   <div>
     <h2>Congrats! You've configured and run the sample application.</h2>
-    <p>The aim of this project is to develop and evaluate a new approach to system assurance: a modular approach, taking constructive logic as an organizing principal but replacing formal proof structures with more diverse forms of evidence, and logical judgements based on proofs with engineering judgments based on such evidence, to improve management of complex projects for stakeholder value.</p>
+    <p>MEAN.JS is a web application boilerplate, which means you should start changing everything :-)</p>
     <p>This sample application tracks users and articles.</p>
     <ul>
       <li>
