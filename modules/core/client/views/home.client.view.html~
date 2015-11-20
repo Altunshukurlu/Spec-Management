@@ -1,84 +1,70 @@
 <section ng-controller="HomeController">
-  <div class="jumbotron text-center">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
-        <img alt="MEAN.JS" class="img-responsive text-center" src="modules/core/client/img/brand/logo.png" />
-      </div>
-    </div>
-    <br>
-    <div class="row">
-      <p class="lead">
-        Open-Source Full-Stack Solution For MEAN Applications
-      </p>
-    </div>
-    <div class="row">
-      <p>
-        <a class="btn btn-primary btn-lg" href="http://meanjs.org" target="_blank">Learn more</a>
-      </p>
-    </div>
-  </div>
-  <div>
-    <h2>Congrats! You've configured and run the sample application.</h2>
-    <p>MEAN.JS is a web application boilerplate, which means you should start changing everything :-)</p>
-    <p>This sample application tracks users and articles.</p>
+  <h1 align="center">A Constructive Logic Approach to System Value Assurance</h1>
+    
+    <p>The aim of this project is to develop and evaluate a new approach to system assurance: a modular approach, taking constructive logic as an organizing principal but replacing formal proof structures with more diverse forms of evidence, and logical judgements based on proofs with engineering judgments based on such evidence, to improve management of complex projects for stakeholder value. The approach is meant at least partly subsume dependability/safety properties and assurance as just one of multiple properties that ultimately contribute to system value and stakeholder satisfaction.</p>
+
+	<h2>Shortcomings in the State of the Art </h2>
+    <p>Shortcomings in the current state of the art include</p>
+
     <ul>
       <li>
-        Click
-        <em>Sign Up</em> to get started.
+        Lack of a satisfactory, practical, useful, theoretically defensible, validated method for making judgments about validity of propositions based on informal, incomplete, imperfect evidence
       </li>
       <li>
-        Configure your app to work with your social accounts, by editing the
-        <em>/config/env/*.js</em> files.
+        Overfocus on dependability properties to the exclusion of other properties that are also critical in producing systems of value to diverse stakeholders (e.g., Torvalds criticism of security zealots)
       </li>
       <li>
-        Edit your users module.
+        Inadequate expressiveness of claims language (basically and-trees, Horn clauses)
       </li>
       <li>
-        Add new CRUD modules.
+        Inadequate support for system and assurance case evolution
       </li>
       <li>
-        Have fun...
+        lack of flexibility, e.g., with respect to "pluggable" inference rules
+      </li>
+      <li>
+        Old-fashioned tools, e.g., desktop software based on Eclipse
       </li>
     </ul>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
-      <h2><strong>M</strong>ongoDB</h2>
-      <p><a target="_blank" href="http://mongodb.org/">MongoDB</a> is a NoSQL database. MongoDB's <a target="_blank" href="http://docs.mongodb.org/manual/">great manual</a> is the place to get started with NoSQL and MongoDB.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>E</strong>xpress</h2>
-      <p><a target="_blank" href="http://expressjs.com/"> Express</a> is a NodeJS server-side application web framework. Check out <a target="_blank" href="http://expressjs.com/4x/api.html">The ExpressJS API reference for more information</a> or <a target="_blank" href="http://stackoverflow.com/questions/8144214/learning-express-for-node-js">StackOverflow</a> for more info.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>A</strong>ngularJS</h2>
-      <p><a target="_blank" href="http://angularjs.org/">AngularJS</a> is client-side web application framework. The <a target="_blank" href="http://www.thinkster.io/">Thinkster Popular Guide</a> and <a target="_blank" href="https://egghead.io/">Egghead Videos</a> are great resources.</p>
-    </div>
-    <div class="col-md-3">
-      <h2><strong>N</strong>ode.js</h2>
-      <p><a target="_blank" href="http://nodejs.org/">Node.js</a> is a JavaScript run-time, popular for being a web server platform. Node's website and this <a target="_blank" href="http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js">stackOverflow thread</a> offer excellent starting points to get to grasps with node.</p>
-    </div>
-  </div>
-  <div class="well">
-    <h2>MEAN.JS Documentation</h2>
-    <p>
-      Once you're familiar with the foundation technology, check out the MEAN.JS Documentation:
-      <ul>
-        <li><a target="_blank" href="http://meanjs.org/docs.html">MEAN.JS Documentation</a>
-        </li>
-        <!-- <li><a target="_blank" href="http://meanjs.org/generator.html">Yeoman Generator</a>
-				</li> -->
-        <li><a target="_blank" href="http://meanjs.org/modules.html">Modules</a>
-        </li>
-        <li><a target="_blank" href="http://meanjs.org/changelog.html">Changelog</a>
-        </li>
-        <li><a target="_blank" href="http://meanjs.org/community.html">Community</a>
-        </li>
-        <li><a target="_blank" href="http://blog.meanjs.org">Blog</a>
-        </li>
-      </ul>
-    </p>
-  </div>
-  <br>Enjoy &amp; Keep Us Updated,
-  <br>The MEAN.JS Team.
+ 
+
+
+	<h2>What's New? </h2>
+   
+    <p> First, system safety is just one of many properties that contribute to system value. We will take the Boehm/Sullivan formal ility ontology as a starting point with the intent to replace safety or dependability with value as the top level proposition in assurance cases.</p>
+
+      <p> Second, we will will replace the and-trees of traditional safety assurance clases with far more expressive notations modeled on the structures of higher-order constructive logic. This will make it possible, for example, to say that a stakeholder will be satisfied by this or that, whereas today's assurance cases can generally state only that this and that is required.</p>
+
+      <p> Third, we will provide flexibility in the inference rules for such logics. For example, in some cases we'll support logical deduction. In other cases, we'll support probabilistic inference. Etc.</p>
+
+      <p> Fourth, we will base our prototype tool implementation on modern web application technology. Our initial work will explore the use of the so-called MEAN Stack---Mongo DB, Express, Angular, and Node.js---as a platform for building highly interactive, responsive, and functional web-based tools.</p>
+
+      <p> Fifth, we will support broad range of expressiveness other than and-trees.</p>
+      
+ 
+<h2>New Approach </h2>
+    <p>We propose a method and a system that will enable engineers and decision makers to</p>
+
+    <ul>
+      <li>
+        manage and evolve representations of systems and their components, environments, and stakeholders as the real-world subject matter to which propositions (discussed next) refer
+      </li>
+      <li>
+        employ concepts from constructive logic to build propositions about systems and their components, environments, and stakeholders
+      </li>
+      <li>
+        Inadequate expressiveness of claims language (basically and-trees, Horn clauses)
+      </li>
+      <li>
+        Inadequate support for system and assurance case evolution
+      </li>
+      <li>
+        lack of flexibility, e.g., with respect to "pluggable" inference rules
+      </li>
+      <li>
+        Old-fashioned tools, e.g., desktop software based on Eclipse
+      </li>
+    </ul>
+
+  
 </section>

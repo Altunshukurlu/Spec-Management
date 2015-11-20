@@ -1,0 +1,19 @@
+<section ng-controller="PropcreatorsController" ng-init="find()">
+  <div class="page-header">
+    <h1>Proposition Creators</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="propCreator in propCreators" ui-sref="propcreators.view({propCId: propCreator._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="propCreator.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="propCreator.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="propCreator.title"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="propCreators.$resolved && !propCreators.length">
+    No Creator yet, why don't you <a ui-sref="propcreators.create">create one</a>?
+  </div>
+</section>
