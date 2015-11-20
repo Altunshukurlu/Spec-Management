@@ -1,0 +1,20 @@
+<section ng-controller="EvidencesController" ng-init="find()">
+  <div class="page-header">
+    <h1>Evidences</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="evidence in evidences" ui-sref="evidences.view({evidenceId: evidence._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="evidence.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="evidence.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="evidence.title"></h4>
+      <p class="list-group-item-text" ng-bind="evidence.content"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="evidences.$resolved && !evidences.length">
+    No evidences yet, why don't you <a ui-sref="evidences.create">create one</a>?
+  </div>
+</section>
