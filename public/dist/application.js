@@ -106,16 +106,6 @@ angular.element(document).ready(function () {
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('articles');
-
-'use strict';
-
-// Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('chat');
-
-'use strict';
-
-// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('core');
 ApplicationConfiguration.registerModule('core.admin', ['core']);
 ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
@@ -123,12 +113,17 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('propositions');
+ApplicationConfiguration.registerModule('evidences');
 
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('spec');
+ApplicationConfiguration.registerModule('propcreators');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('things');
 
 'use strict';
 
@@ -136,244 +131,6 @@ ApplicationConfiguration.registerModule('spec');
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
-
-'use strict';
-
-// Configuring the Articles module
-angular.module('articles').run(['Menus',
-  function (Menus) {
-    // Add the articles dropdown item
-    Menus.addMenuItem('topbar', {
-      title: 'Articles',
-      state: 'articles',
-      type: 'dropdown',
-      roles: ['*']
-    });
-
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'List Articles',
-      state: 'articles.list'
-    });
-
-    // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'Create Articles',
-      state: 'articles.create',
-      roles: ['user']
-    });
-  }
-]);
-
-'use strict';
-
-// Setting up route
-angular.module('articles').config(['$stateProvider',
-  function ($stateProvider) {
-    // Articles state routing
-    $stateProvider
-      .state('articles', {
-        abstract: true,
-        url: '/articles',
-        template: '<ui-view/>'
-      })
-      .state('articles.list', {
-        url: '',
-        templateUrl: 'modules/articles/client/views/list-articles.client.view.html'
-      })
-      .state('articles.create', {
-        url: '/create',
-        templateUrl: 'modules/articles/client/views/create-article.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      })
-      .state('articles.view', {
-        url: '/:articleId',
-        templateUrl: 'modules/articles/client/views/view-article.client.view.html'
-      })
-      .state('articles.edit', {
-        url: '/:articleId/edit',
-        templateUrl: 'modules/articles/client/views/edit-article.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      });
-  }
-]);
-
-'use strict';
-
-// Articles controller
-angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Articles',
-  function ($scope, $stateParams, $location, Authentication, Articles) {
-    $scope.authentication = Authentication;
-
-    // Create new Article
-    $scope.create = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      // Create new Article object
-      var article = new Articles({
-        title: this.title,
-        content: this.content
-      });
-
-      // Redirect after save
-      article.$save(function (response) {
-        $location.path('articles/' + response._id);
-
-        // Clear form fields
-        $scope.title = '';
-        $scope.content = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Remove existing Article
-    $scope.remove = function (article) {
-      if (article) {
-        article.$remove();
-
-        for (var i in $scope.articles) {
-          if ($scope.articles[i] === article) {
-            $scope.articles.splice(i, 1);
-          }
-        }
-      } else {
-        $scope.article.$remove(function () {
-          $location.path('articles');
-        });
-      }
-    };
-
-    // Update existing Article
-    $scope.update = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      var article = $scope.article;
-
-      article.$update(function () {
-        $location.path('articles/' + article._id);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Find a list of Articles
-    $scope.find = function () {
-      $scope.articles = Articles.query();
-    };
-
-    // Find existing Article
-    $scope.findOne = function () {
-      $scope.article = Articles.get({
-        articleId: $stateParams.articleId
-      });
-    };
-  }
-]);
-
-'use strict';
-
-//Articles service used for communicating with the articles REST endpoints
-angular.module('articles').factory('Articles', ['$resource',
-  function ($resource) {
-    return $resource('api/articles/:articleId', {
-      articleId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
-
-'use strict';
-
-// Configuring the Chat module
-angular.module('chat').run(['Menus',
-  function (Menus) {
-    // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Chat',
-      state: 'chat'
-    });
-  }
-]);
-
-'use strict';
-
-// Configure the 'chat' module routes
-angular.module('chat').config(['$stateProvider',
-  function ($stateProvider) {
-    $stateProvider
-      .state('chat', {
-        url: '/chat',
-        templateUrl: 'modules/chat/client/views/chat.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      });
-  }
-]);
-
-'use strict';
-
-// Create the 'chat' controller
-angular.module('chat').controller('ChatController', ['$scope', '$location', 'Authentication', 'Socket',
-  function ($scope, $location, Authentication, Socket) {
-    // Create a messages array
-    $scope.messages = [];
-
-    // If user is not signed in then redirect back home
-    if (!Authentication.user) {
-      $location.path('/');
-    }
-
-    // Make sure the Socket is connected
-    if (!Socket.socket) {
-      Socket.connect();
-    }
-
-    // Add an event listener to the 'chatMessage' event
-    Socket.on('chatMessage', function (message) {
-      $scope.messages.unshift(message);
-    });
-
-    // Create a controller method for sending messages
-    $scope.sendMessage = function () {
-      // Create a new message object
-      var message = {
-        text: this.messageText
-      };
-
-      // Emit a 'chatMessage' message event
-      Socket.emit('chatMessage', message);
-
-      // Clear the message text
-      this.messageText = '';
-    };
-
-    // Remove the event listener when the controller instance is destroyed
-    $scope.$on('$destroy', function () {
-      Socket.removeListener('chatMessage');
-    });
-  }
-]);
 
 'use strict';
 
@@ -797,26 +554,28 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
 
 'use strict';
 
-// Configuring the Articles module
-angular.module('propositions').run(['Menus',
+// Configuring the Evidences module
+angular.module('evidences').run(['Menus',
   function (Menus) {
-    // Add the articles dropdown item
+    // Add the evidences dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Requirements',
-      state: 'requirements',
+      title: 'Evidences',
+      state: 'evidences',
       type: 'dropdown',
       roles: ['*']
     });
 
-    Menus.addSubMenuItem('topbar', 'requirements', {
-      title: 'Propositions',
-      state: 'requirements.propositions'
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'evidences', {
+      title: 'List Evidences',
+      state: 'evidences.list'
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'requirements', {
-      title: 'Things',
-      state: 'requirements.things'
+    Menus.addSubMenuItem('topbar', 'evidences', {
+      title: 'Create Evidence',
+      state: 'evidences.create',
+      //roles: ['user']
     });
   }
 ]);
@@ -824,63 +583,66 @@ angular.module('propositions').run(['Menus',
 'use strict';
 
 // Setting up route
-angular.module('propositions').config(['$stateProvider',
+angular.module('evidences').config(['$stateProvider',
   function ($stateProvider) {
+    // Evidences state routing
     $stateProvider
-      .state('requirements', {
+      .state('evidences', {
         abstract: true,
-        url: '/requirements',
+        url: '/evidences',
         template: '<ui-view/>'
       })
-      .state('requirements.propositions', {
-        url: '/propositions',
-        templateUrl: 'modules/requirements/client/views/list-proposition.client.view.html'
+      .state('evidences.list', {
+        url: '',
+        templateUrl: 'modules/evidences/client/views/list-evidences.client.view.html'
       })
-      .state('requirements.propositionscreate', {
-        url: '/propositions/create',
-        templateUrl: 'modules/requirements/client/views/create-proposition.client.view.html'
+      .state('evidences.create', {
+        url: '/create',
+        templateUrl: 'modules/evidences/client/views/create-evidence.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
-      .state('requirements.propositionsview', {
-        url: '/propositions/:articleId',
-        templateUrl: 'modules/requirements/client/views/view-proposition.client.view.html'
+      .state('evidences.view', {
+        url: '/:evidenceId',
+        templateUrl: 'modules/evidences/client/views/view-evidence.client.view.html'
       })
-      .state('requirements.propositionsedit', {
-        url: '/propositions/:articleId/edit',
-        templateUrl: 'modules/requirements/client/views/edit-proposition.client.view.html',
-      })
-      .state('requirements.things', {
-        url: '/things',
-        templateUrl: 'modules/requirements/client/views/list-thing.client.view.html'
+      .state('evidences.edit', {
+        url: '/:evidenceId/edit',
+        templateUrl: 'modules/evidences/client/views/edit-evidence.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       });
   }
 ]);
 
 'use strict';
 
-// Articles controller
-angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions',
-  function ($scope, $stateParams, $location, Authentication, Propositions) {
+// Evidences controller
+angular.module('evidences').controller('EvidencesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Evidences',
+  function ($scope, $stateParams, $location, Authentication, Evidences) {
     $scope.authentication = Authentication;
 
-    // Create new Article
+    // Create new Evidence
     $scope.create = function (isValid) {
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
+        $scope.$broadcast('show-errors-check-validity', 'evidenceForm');
 
         return false;
       }
 
-      // Create new Article object
-      var article = new Propositions({
+      // Create new Evidence object
+      var evidence = new Evidences({
         title: this.title,
         content: this.content
       });
 
       // Redirect after save
-      article.$save(function (response) {
-        $location.path('requirements/propositions/' + response._id);
+      evidence.$save(function (response) {
+        $location.path('evidences/' + response._id);
 
         // Clear form fields
         $scope.title = '';
@@ -890,51 +652,51 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       });
     };
 
-    // Remove existing Article
-    $scope.remove = function (article) {
-      if (article) {
-        article.$remove();
+    // Remove existing Evidence
+    $scope.remove = function (evidence) {
+      if (evidence) {
+        evidence.$remove();
 
-        for (var i in $scope.articles) {
-          if ($scope.articles[i] === article) {
-            $scope.articles.splice(i, 1);
+        for (var i in $scope.evidences) {
+          if ($scope.evidences[i] === evidence) {
+            $scope.evidences.splice(i, 1);
           }
         }
       } else {
-        $scope.article.$remove(function () {
-          $location.path('requirements/propositions');
+        $scope.evidence.$remove(function () {
+          $location.path('evidences');
         });
       }
     };
 
-    // Update existing Article
+    // Update existing Evidence
     $scope.update = function (isValid) {
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
+        $scope.$broadcast('show-errors-check-validity', 'evidenceForm');
 
         return false;
       }
 
-      var article = $scope.article;
+      var evidence = $scope.evidence;
 
-      article.$update(function () {
-        $location.path('requirements/propositions/' + article._id);
+      evidence.$update(function () {
+        $location.path('evidences/' + evidence._id);
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Find a list of Articles
+    // Find a list of Evidences
     $scope.find = function () {
-      $scope.articles = Propositions.query();
+      $scope.evidences = Evidences.query();
     };
 
-    // Find existing Article
+    // Find existing Evidence
     $scope.findOne = function () {
-      $scope.article = Propositions.get({
-        propId: $stateParams.articleId
+      $scope.evidence = Evidences.get({
+        evidenceId: $stateParams.evidenceId
       });
     };
   }
@@ -942,11 +704,11 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
 
 'use strict';
 
-//Articles service used for communicating with the articles REST endpoints
-angular.module('propositions').factory('Propositions', ['$resource',
+//Evidences service used for communicating with the evidences REST endpoints
+angular.module('evidences').factory('Evidences', ['$resource',
   function ($resource) {
-    return $resource('api/propositions/:propId', {
-      propId: '@_id'
+    return $resource('api/evidences/:evidenceId', {
+      evidenceId: '@_id'
     }, {
       update: {
         method: 'PUT'
@@ -957,46 +719,311 @@ angular.module('propositions').factory('Propositions', ['$resource',
 
 'use strict';
 
-// Configuring the Chat module
-angular.module('spec').run(['Menus',
+// Configuring the Articles module
+angular.module('propcreators').run(['Menus',
   function (Menus) {
-    // Set top bar menu items
+    // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Spec',
-      state: 'spec',
-      roles:['*']
+      title: 'Creators',
+      state: 'propcreators',
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    Menus.addSubMenuItem('topbar', 'propcreators', {
+      title: 'List Creators',
+      state: 'propcreators.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'propcreators', {
+      title: 'New Creator',
+      state: 'propcreators.create'
     });
   }
 ]);
 
 'use strict';
 
-// Configure the 'chat' module routes
-angular.module('spec').config(['$stateProvider',
+// Setting up route
+angular.module('propcreators').config(['$stateProvider',
   function ($stateProvider) {
     $stateProvider
-      .state('spec', {
-        url: '/spec',
-        templateUrl: 'modules/spec/client/views/chat.client.view.html'//,
-        //data: {
-        //  roles: ['*']
-        //}
+      .state('propcreators', {
+        abstract: true,
+        url: '/propcreators',
+        template: '<ui-view/>'
+      })
+      .state('propcreators.list', {
+        url: '',
+        templateUrl: 'modules/propcreators/client/views/list-propcreator.client.view.html'
+      })
+      .state('propcreators.create', {
+        url: '/create',
+        templateUrl: 'modules/propcreators/client/views/create-propcreator.client.view.html'
+      })
+      .state('propcreators.view', {
+        url: '/:propCId',
+        templateUrl: 'modules/propcreators/client/views/view-propcreator.client.view.html'
+      })
+      .state('propcreators.edit', {
+        url: '/:propCId/edit',
+        templateUrl: 'modules/propcreators/client/views/edit-propcreator.client.view.html'
       });
   }
 ]);
 
 'use strict';
 
-// Create the 'chat' controller
-angular.module('spec').controller('SpecController', ['$scope',
-  function ($scope) {
-    //////////////////////The Spec Part//////////////////////
-    $scope.propertyList = ['Resilience'];
+// Propcreator controller
+angular.module('propcreators').controller('PropcreatorsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propcreators',
+  function ($scope, $stateParams, $location, Authentication, Propcreators) {
+    $scope.authentication = Authentication;
 
-    $scope.sendPName = function(){
-      $scope.propertyList.push(this.pName);
-      this.pName = '';
+    // Create new proposition creator
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propCreatorForm');
+
+        return false;
+      }
+
+      // Create new Propcreator object
+      var propCreator = new Propcreators({
+        title: this.title
+      });
+
+      // Redirect after save
+      propCreator.$save(function (response) {
+        $location.path('propcreators/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
     };
+
+    // Remove existing Propcreator 
+    $scope.remove = function (propCreator) {
+      if (propCreator) {
+        propCreator.$remove();
+        for (var i in $scope.propCreators) {
+          if ($scope.propCreators[i] === propCreator) {
+            $scope.propCreators.splice(i, 1); 
+          }
+        }
+      } else {
+        $scope.propCreator.$remove(function () {
+          $location.path('propcreators');
+        });
+      }   
+    };  
+
+
+    // Update existing Propcreator
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propCreatorForm');
+
+        return false;
+      }
+
+      var propCreator = $scope.propCreator;
+
+      propCreator.$update(function () {
+        $location.path('propcreators/' + propCreator._id);
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Propcreators 
+    $scope.find = function () { 
+      $scope.propCreators = Propcreators.query();
+    };
+
+    // Find existing Propcreators
+    $scope.findOne = function () {
+      $scope.propCreator = Propcreators.get({
+        propCId: $stateParams.propCId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Articles service used for communicating with the articles REST endpoints
+angular.module('propcreators').factory('Propcreators', ['$resource',
+  function ($resource) {
+    return $resource('api/propcreators/:propCId', {
+      propCId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
+// Configuring the Things module
+angular.module('things').run(['Menus',
+  function (Menus) {
+    // Add the articles dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Things',
+      state: 'things',
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    Menus.addSubMenuItem('topbar', 'things', {
+      title: 'List Things',
+      state: 'things.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'things', {
+      title: 'Create Things',
+      state: 'things.create'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('things').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('things', {
+        abstract: true,
+        url: '/things',
+        template: '<ui-view/>'
+      })
+      .state('things.list', {
+        url: '',
+        templateUrl: 'modules/things/client/views/list-thing.client.view.html'
+      })
+      .state('things.create', {
+        url: '/create',
+        templateUrl: 'modules/things/client/views/create-thing.client.view.html'
+      })
+      .state('things.view', {
+        url: '/:thingId',
+        templateUrl: 'modules/things/client/views/view-thing.client.view.html'
+      })
+      .state('things.edit', {
+        url: '/:thingId/edit',
+        templateUrl: 'modules/things/client/views/edit-thing.client.view.html'
+      });
+  }
+]);
+
+
+'use strict';
+
+// Things controller
+angular.module('things').controller('ThingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Things',
+  function ($scope, $stateParams, $location, Authentication, Things) {
+    $scope.authentication = Authentication;
+
+    // Create new thing
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'thingForm');
+
+        return false;
+      }
+
+      // Create new Things object
+      var thing = new Things({
+        title: this.title,
+        content: this.content
+      });
+
+      // Redirect after save
+      thing.$save(function (response) {
+        $location.path('things/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.content = '';
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing thing 
+    $scope.remove = function (thing) {
+      if (thing) {
+        thing.$remove();
+        for (var i in $scope.thing) {
+          if ($scope.things[i] === thing) {
+            $scope.things.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.thing.$remove(function () {
+          $location.path('things');
+        });
+      }
+    };
+
+    // Update existing Thing
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'thingForm');
+
+        return false;
+      }
+
+      var thing = $scope.thing;
+
+      thing.$update(function () {
+        $location.path('things/' + thing._id);
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Things 
+    $scope.find = function () { 
+      $scope.things = Things.query();
+    };
+
+    // Find existing Things
+    $scope.findOne = function () {
+      $scope.thing = Things.get({
+        thingId: $stateParams.thingId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Things service used for communicating with the things REST endpoints
+angular.module('things').factory('Things', ['$resource',
+  function ($resource) {
+    return $resource('api/things/:thingId', {
+      thingId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 ]);
 
