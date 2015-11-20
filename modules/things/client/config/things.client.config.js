@@ -1,25 +1,25 @@
 'use strict';
 
-// Configuring the Articles module
-angular.module('propositions').run(['Menus',
+// Configuring the Things module
+angular.module('things').run(['Menus',
   function (Menus) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Requirements',
-      state: 'requirements',
+      title: 'Things',
+      state: 'things',
       type: 'dropdown',
       roles: ['*']
     });
 
-    Menus.addSubMenuItem('topbar', 'requirements', {
-      title: 'Propositions',
-      state: 'requirements.propositions'
+    Menus.addSubMenuItem('topbar', 'things', {
+      title: 'List Things',
+      state: 'things.list'
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'requirements', {
-      title: 'Things',
-      state: 'requirements.things'
+    Menus.addSubMenuItem('topbar', 'things', {
+      title: 'Create Things',
+      state: 'things.create'
     });
   }
 ]);

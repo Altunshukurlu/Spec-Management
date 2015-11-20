@@ -1,3 +1,4 @@
+
 'use strict';
 
 /**
@@ -5,23 +6,23 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  Proposition = mongoose.model('Proposition'),
+  Thing = mongoose.model('Things'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
- * Create a article
+ * Create a Thing
  */
 exports.create = function (req, res) {
-  var article = new Proposition(req.body);
-  article.user = req.user;
+  var thing = new Thing(req.body);
+  thing.user = req.user;
 
-  article.save(function (err) {
+  thing.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(article);
+      res.json(thing);
     }
   });
 };
@@ -30,81 +31,82 @@ exports.create = function (req, res) {
  * Show the current article
  */
 exports.read = function (req, res) {
-  res.json(req.article);
+  res.json(req.thing);
 };
 
 /**
- * Update a article
+ * Update a thing
  */
 exports.update = function (req, res) {
-  var article = req.article;
+  var thing = req.thing;
 
-  article.title = req.body.title;
-  article.content = req.body.content;
+  thing.title = req.body.title;
+  thing.content = req.body.content;
 
-  article.save(function (err) {
+  thing.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(article);
+      res.json(thing);
     }
   });
 };
 
 /**
- * Delete an article
+ * Delete a thing
  */
 exports.delete = function (req, res) {
-  var article = req.article;
+  var thing = req.thing;
 
-  article.remove(function (err) {
+  thing.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(article);
+      res.json(thing);
     }
   });
 };
 
 /**
- * List of Articles
+ * List of Things
  */
 exports.list = function (req, res) {
-  Proposition.find().sort('-created').populate('user', 'displayName').exec(function (err, articles) {
+  Thing.find().sort('-created').populate('user', 'displayName').exec(function (err, things) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(articles);
+      res.json(things);
     }
   });
 };
 
+
 /**
- * Article middleware
+ * Thing middleware
  */
-exports.propByID = function (req, res, next, id) {
+exports.thingByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Proposition is invalid'
+      message: 'Thing is invalid'
     });
   }
 
-  Proposition.findById(id).populate('user', 'displayName').exec(function (err, article) {
+  Thing.findById(id).populate('user', 'displayName').exec(function (err, thing) {
     if (err) {
       return next(err);
-    } else if (!article) {
+    } else if (!thing) {
       return res.status(404).send({
-        message: 'No proposition with that identifier has been found'
+        message: 'No thing  with that identifier has been found'
       });
     }
-    req.article = article;
+    req.thing = thing;
     next();
   });
 };

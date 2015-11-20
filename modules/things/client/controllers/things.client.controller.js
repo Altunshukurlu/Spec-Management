@@ -1,29 +1,30 @@
+
 'use strict';
 
-// Proposition controller
-angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions',
-  function ($scope, $stateParams, $location, Authentication, Propositions) {
+// Things controller
+angular.module('things').controller('ThingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Things',
+  function ($scope, $stateParams, $location, Authentication, Things) {
     $scope.authentication = Authentication;
 
-    // Create new proposition
+    // Create new thing
     $scope.create = function (isValid) {
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'propForm');
+        $scope.$broadcast('show-errors-check-validity', 'thingForm');
 
         return false;
       }
 
-      // Create new Proposition object
-      var prop = new Propositions({
+      // Create new Things object
+      var thing = new Things({
         title: this.title,
         content: this.content
       });
 
       // Redirect after save
-      prop.$save(function (response) {
-        $location.path('requirements/propositions/' + response._id);
+      thing.$save(function (response) {
+        $location.path('things/' + response._id);
 
         // Clear form fields
         $scope.title = '';
@@ -33,51 +34,50 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       });
     };
 
-    // Remove existing Proposition 
-    $scope.remove = function (prop) {
-      if (prop) {
-        prop.$remove();
-        for (var i in $scope.props) {
-          if ($scope.props[i] === prop) {
-            $scope.props.splice(i, 1); 
+    // Remove existing thing 
+    $scope.remove = function (thing) {
+      if (thing) {
+        thing.$remove();
+        for (var i in $scope.thing) {
+          if ($scope.things[i] === thing) {
+            $scope.things.splice(i, 1);
           }
         }
       } else {
-        $scope.prop.$remove(function () {
-          $location.path('requirements/propositions');
+        $scope.thing.$remove(function () {
+          $location.path('things');
         });
-      }   
-    };  
+      }
+    };
 
-
-    // Update existing Proposition
+    // Update existing Thing
     $scope.update = function (isValid) {
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'propForm');
+        $scope.$broadcast('show-errors-check-validity', 'thingForm');
 
         return false;
       }
 
-      var prop = $scope.prop;
+      var thing = $scope.thing;
 
-      prop.$update(function () {
-        $location.path('requirements/propositions/' + prop._id);
+      thing.$update(function () {
+        $location.path('things/' + thing._id);
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Find a list of Propositions 
+    // Find a list of Things 
     $scope.find = function () { 
-      $scope.props = Propositions.query();
+      $scope.things = Things.query();
     };
 
-    // Find existing Propositions
+    // Find existing Things
     $scope.findOne = function () {
-      $scope.prop = Propositions.get({
-        propId: $stateParams.propId
+      $scope.thing = Things.get({
+        thingId: $stateParams.thingId
       });
     };
   }

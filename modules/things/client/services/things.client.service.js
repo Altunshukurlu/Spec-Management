@@ -1,10 +1,10 @@
 'use strict';
 
-//Articles service used for communicating with the articles REST endpoints
-angular.module('propositions').factory('Propositions', ['$resource',
+//Things service used for communicating with the things REST endpoints
+angular.module('things').factory('Things', ['$resource',
   function ($resource) {
-    return $resource('api/propositions/:propId', {
-      propId: '@_id'
+    return $resource('api/things/:thingId', {
+      thingId: '@_id'
     }, {
       update: {
         method: 'PUT'
