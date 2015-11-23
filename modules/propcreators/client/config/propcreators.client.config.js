@@ -7,6 +7,7 @@ angular.module('propcreators').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Creators',
       state: 'propcreators',
+      position: 1,
       type: 'dropdown',
       roles: ['*']
     });

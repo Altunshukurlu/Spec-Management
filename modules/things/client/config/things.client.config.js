@@ -7,6 +7,7 @@ angular.module('things').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Things',
       state: 'things',
+      position: 0,
       type: 'dropdown',
       roles: ['*']
     });
