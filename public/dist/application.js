@@ -118,6 +118,11 @@ ApplicationConfiguration.registerModule('evidences');
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('projects');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('propcreators');
 
 'use strict';
@@ -561,6 +566,7 @@ angular.module('evidences').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Evidences',
       state: 'evidences',
+      position: 3,
       type: 'dropdown',
       roles: ['*']
     });
@@ -719,6 +725,163 @@ angular.module('evidences').factory('Evidences', ['$resource',
 
 'use strict';
 
+// Configuring the Projects module
+angular.module('projects').run(['Menus',
+  function (Menus) {
+    // Add the projects dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Projects',
+      state: 'projects',
+      position: 0,
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    Menus.addSubMenuItem('topbar', 'projects', {
+      title: 'List Projects',
+      state: 'projects.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'projects', {
+      title: 'Create Projects',
+      state: 'projects.create'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('projects').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('projects', {
+        abstract: true,
+        url: '/projects',
+        template: '<ui-view/>'
+      })
+      .state('projects.list', {
+        url: '',
+        templateUrl: 'modules/projects/client/views/list-project.client.view.html'
+      })
+      .state('projects.create', {
+        url: '/create',
+        templateUrl: 'modules/projects/client/views/create-project.client.view.html'
+      })
+      .state('projects.view', {
+        url: '/:projId',
+        templateUrl: 'modules/projects/client/views/view-project.client.view.html'
+      })
+      .state('projects.edit', {
+        url: '/:projId/edit',
+        templateUrl: 'modules/projects/client/views/edit-project.client.view.html'
+      });
+  }
+]);
+
+
+'use strict';
+
+// Projects controller
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects',
+  function ($scope, $stateParams, $location, Authentication, Projects) {
+    $scope.authentication = Authentication;
+
+    // Create new project
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'proejctForm');
+
+        return false;
+      }
+
+      // Create new Projects object
+      var project = new Projects({
+        title: this.title,
+        content: this.content
+      });
+
+      // Redirect after save
+      project.$save(function (response) {
+        $location.path('projects/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.content = '';
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing project
+    $scope.remove = function (project) {
+      if (project) {
+        project.$remove();
+        for (var i in $scope.project) {
+          if ($scope.projects[i] === project) {
+            $scope.projects.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.project.$remove(function () {
+          $location.path('projects');
+        });
+      }
+    };
+
+    // Update existing Project
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'projectForm');
+
+        return false;
+      }
+
+      var project = $scope.project;
+
+      project.$update(function () {
+        $location.path('projects/' + project._id);
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Projects
+    $scope.find = function () {
+      $scope.projects = Projects.query();
+    };
+
+    // Find existing Projects
+    $scope.findOne = function () {
+      $scope.project = Projects.get({
+        projId: $stateParams.projId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Projects service used for communicating with the projects REST endpoints
+angular.module('projects').factory('Projects', ['$resource',
+  function ($resource) {
+    return $resource('api/projects/:projId', {
+      projId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
 // Configuring the Articles module
 angular.module('propcreators').run(['Menus',
   function (Menus) {
@@ -726,6 +889,7 @@ angular.module('propcreators').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Creators',
       state: 'propcreators',
+      position: 1,
       type: 'dropdown',
       roles: ['*']
     });
@@ -880,6 +1044,7 @@ angular.module('things').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Things',
       state: 'things',
+      position: 0,
       type: 'dropdown',
       roles: ['*']
     });
