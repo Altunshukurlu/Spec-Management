@@ -58,7 +58,7 @@ diverse stakeholders (e.g., Torvalds criticism of security zealots)
   rules
 * old-fashioned tools, e.g., desktop software based on Eclipse
 
-# New Approach 
+# Our Approach 
 
 We propose a method and a system that will enable engineers and
 decision makers to
@@ -76,7 +76,8 @@ to requirements that are intended to be satisifed by future actions
 *  manage, understand, and evaluate diverse forms of evidence
 related to propositions
 * support diverse inference rules and methods for deriving judgments
-  about propositions from evidence
+about propositions from evidence
+* forms of evidence could include Software/system test results Structured, composite pieces of evidence Citations to external documents of many kinds Experience reports by qualified stakeholders Statistical analysis of data, e.g., from system operation Formal proofs, e.g., of correctness of code with respect to given specifications Certification of compliance with regulatory regimes Software and system inspections Static analysis Simulation results Prototype results Customer/user survey results (user testing)
 * compute, manage and evolve judgements about such propositions
 * support modular packaging of systems/components and associated value
 assurance cases
