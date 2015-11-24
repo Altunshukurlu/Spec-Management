@@ -1,0 +1,21 @@
+<section ng-controller="PropositionsController" ng-init="find()">
+  <div class="page-header">
+    <h1>Propositions</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="proposition in propositions" ui-sref="propositions.view({propositionId: proposition._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="proposition.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="proposition.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="proposition.title"></h4>
+	<p ng-bind="proposition.thing">Thing </p>
+    </a>
+  </div>
+
+  <div class="alert alert-warning text-center" ng-if="propositions.$resolved && !propositions.length">
+    No propositions yet, why don't you <a ui-sref="propositions.create">create one</a>?
+  </div>
+</section>

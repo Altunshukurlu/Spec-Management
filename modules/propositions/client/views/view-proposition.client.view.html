@@ -1,0 +1,22 @@
+<section ng-controller="PropositionsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="proposition.title"></h1>
+  </div>
+  <div class="pull-right" ng-show="authentication.user._id == proposition.user._id">
+    <a class="btn btn-primary" ui-sref="propositions.edit({propositionId: proposition._id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="proposition.created | date:'mediumDate'"></span>
+      by
+      <span ng-bind="proposition.user.displayName"></span>
+    </em>
+  </small>
+
+</section>
