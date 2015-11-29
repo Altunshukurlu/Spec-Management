@@ -6,7 +6,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  Thing = mongoose.model('Things'),
+  Thing = mongoose.model('Thing'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**

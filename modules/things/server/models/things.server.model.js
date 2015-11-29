@@ -31,4 +31,4 @@ var ThingSchema = new Schema({
   }
 });
 
-mongoose.model('Things', ThingSchema);
+mongoose.model('Thing', ThingSchema);
