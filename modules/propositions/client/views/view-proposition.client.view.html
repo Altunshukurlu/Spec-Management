@@ -1,5 +1,6 @@
 <section ng-controller="PropositionsController" ng-init="findOne()">
   <div class="page-header">
+    <h1 ng-bind="proposition.thing.title"></h1>
     <h1 ng-bind="proposition.title"></h1>
   </div>
   <div class="pull-right" ng-show="authentication.user._id == proposition.user._id">

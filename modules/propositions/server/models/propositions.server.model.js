@@ -22,7 +22,7 @@ var PropositionSchema = new Schema({
   },
   thing: {
     type: Schema.ObjectId,
-    ref: 'Things'
+    ref: 'Thing'
   },
   propcreator: { 
     type: Schema.ObjectId,
@@ -34,4 +34,4 @@ var PropositionSchema = new Schema({
   }
 });
 
-mongoose.model('Propositions', PropositionSchema);
+mongoose.model('Proposition', PropositionSchema);

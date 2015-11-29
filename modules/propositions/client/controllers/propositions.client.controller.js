@@ -1,15 +1,19 @@
+
 'use strict';
 
 // Propositions controller
 angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions', 'Things', 'Propcreators',
   function ($scope, $stateParams, $location, Authentication, Propositions, Things) {
+    
     $scope.authentication = Authentication;
     $scope.things = Things.query();
-    console.log($scope.things);
+    
     //$scope.propcreators = Propcreators.query();
+
     // Create new proposition
     $scope.create = function (isValid) {
       $scope.error = null;
+
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'propositionForm');
         return false;
@@ -18,16 +22,16 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       // Create new Propositions object
       var proposition = new Propositions({
         title: this.title,
-        thing: this.selectedThing
-        //TODO: add others 
+        thing: this.selectedThing._id
+	//TODO: add others 
       });
 
       // Redirect after save
       proposition.$save(function (response) {
         $location.path('propositions/' + response._id);
         $scope.title = '';
-        //$scope.selectedThing = null; 
-        //TODO: add other forms field 
+	//$scope.selectedThing = null; 
+	//TODO: add other forms field 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -57,9 +61,19 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
         $scope.$broadcast('show-errors-check-validity', 'propositionForm');
         return false;
       }
-
+      console.log('selectedThing: ' + $scope.selectedThing.title);
       var proposition = $scope.proposition;
-
+      proposition.thing = $scope.selectedThing._id;
+      var foundThing = false;
+/*
+      angular.forEach($scope.things, function(thing){
+        if(!foundThing && (thing.title === $scope.selectedThing)){
+          proposition.thing = thing._id;
+          foundThing = true;
+        }
+      });
+*/
+      console.log('proposition thing: '+ proposition.thing);
       proposition.$update(function () {
         $location.path('propositions/' + proposition._id);
       }, function (errorResponse) {
@@ -69,29 +83,40 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
 
     // Find a list of propositions 
     $scope.find = function () { 
-      $scope.propositions = Propositions.query();
-      $scope.things = Things.query();
-      console.log($scope.things);
-      //console.log(propositions[0].title); 
-      //console.log(Things.findById(propositions[0].thing)); 
+      $scope.propositions = Propositions.query(
+/*
+        function(callbackdata){
+        var len = $scope.propositions.length; 
+        $scope.thingsForPropositions = []; 
+        var counter; 
+        for(counter = 0; counter < len; counter++){
+          $scope.thingsForPropositions[counter] = Things.get({
+            thingId: $scope.propositions[counter].thing
+          });
+        }
+        $scope.selectedThing = $scope.propositions[0];
+      }*/
+    );
     };
 
     // Find existing Propositions
     $scope.findOne = function () {
       $scope.proposition = Propositions.get({
         propositionId: $stateParams.propositionId
+      }, function(resData){
+        $scope.selectedThing = resData.thing.title;
       });
-      console.log('Altun===========================');
-      $scope.things = Things.query();
-
-      $scope.oneThing = {};
-      angular.forEach($scope.things, function(obj){
-        console.log(obj);
-        if(obj._id === $stateParams.propositionId){
-          $scope.oneThing = obj;
-        }
+/*
+,function(callbackdata){
+        console.log($scope.proposition);
+        console.log('thingId: ' + $scope.proposition.thing);
+        $scope.thing = Things.get({
+          thingId: $scope.proposition.thing
+        });
       });
+*/
     };
+    
   }
 ]);
 

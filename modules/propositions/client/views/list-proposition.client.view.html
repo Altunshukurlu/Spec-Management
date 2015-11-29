@@ -3,7 +3,7 @@
     <h1>Propositions</h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="proposition in propositions" ui-sref="propositions.view({propositionId: proposition._id})" class="list-group-item">
+    <a ng-repeat="proposition in propositions track by $index" ui-sref="propositions.view({propositionId: proposition._id})" class="list-group-item">
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="proposition.created | date:'mediumDate'"></span>
@@ -11,7 +11,7 @@
         <span ng-bind="proposition.user.displayName"></span>
       </small>
       <h4 class="list-group-item-heading" ng-bind="proposition.title"></h4>
-	<p ng-bind="proposition.thing">Thing </p>
+	<p ng-bind="proposition.thing.title">Thing </p>
     </a>
   </div>
 

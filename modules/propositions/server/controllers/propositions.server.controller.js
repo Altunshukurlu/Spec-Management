@@ -6,7 +6,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  Proposition = mongoose.model('Propositions'),
+  Proposition = mongoose.model('Proposition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -31,7 +31,6 @@ exports.create = function (req, res) {
  * Show the current article
  */
 exports.read = function (req, res) {
-  console.log('read==============================================');
   res.json(req.proposition);
 };
 
@@ -42,7 +41,10 @@ exports.update = function (req, res) {
   var proposition = req.proposition;
 
   proposition.title = req.body.title;
-  proposition.thing = req.body.selectedThing;
+  console.log('req proposition: ' + proposition);
+  console.log('req proposition thing: ' + proposition.thing);
+  proposition.thing = req.body.thing;
+  console.log('req proposition thing: ' + proposition.thing);
  // proposition.thing = req.
   proposition.save(function (err) {
     if (err) {
@@ -75,7 +77,10 @@ exports.delete = function (req, res) {
  * List of Propositions
  */
 exports.list = function (req, res) {
-  Proposition.find().sort('-created').populate('user', 'displayName').exec(function (err, proposition) {
+  Proposition.find().sort('-created')
+    .populate('user', 'displayName')
+    .populate('thing', 'title')
+    .exec(function (err, proposition) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -98,7 +103,10 @@ exports.propositionByID = function (req, res, next, id) {
     });
   }
 
-  Proposition.findById(id).populate('user', 'displayName').exec(function (err, proposition) {
+  Proposition.findById(id)
+    .populate('user', 'displayName')
+    .populate('thing', 'title')
+    .exec(function (err, proposition) {
     if (err) {
       return next(err);
     } else if (!proposition) {

@@ -19,7 +19,6 @@
 	<div class="form-group" show-errors>
 		<label for="things">Things</label>
 		  <select name="things" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
-		  {{selectedThing.title}} {{selectedThing.content}}
 		<div ng-messages="propositionForm.things.$error" role="alert">
       	 	     <p class="help-block error-text" ng-message="required">Thing is required.</p>
        		</div>
