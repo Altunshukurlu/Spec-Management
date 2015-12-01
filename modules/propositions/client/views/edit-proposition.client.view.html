@@ -5,27 +5,38 @@
   <div class="col-md-12">
     <form name="propositionForm" class="form-horizontal" ng-submit="update(propositionForm.$valid)" novalidate>
       <fieldset>
+	       <div class="form-group" show-errors>
+	          <label for="thing">Things: </label> {{proposition.thing.title}}<br/>
+	          <label for="thing">Change to: </label>
+	          <select name="thing" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
+	          <div ng-messages="propositionForm.things.$error" role="alert">
+      	       <p class="help-block error-text" ng-message="required">Thing is required.</p>
+            </div>
+        </div>
+
+	      <div class="form-group" show-errors>
+	        <label for="thing">Creator: </label> {{proposition.propcreator.title}}<br/>
+	        <label for="thing">Change to: </label>
+	        <select name="thing" ng-model="selectedCreator" ng-options="creator.title for creator in creators" required> </select>
+	        <div ng-messages="propositionForm.creator.$error" role="alert">
+      	    <p class="help-block error-text" ng-message="required">Creator is required.</p>
+          </div>
+	      </div>
+
         <div class="form-group" show-errors>
-          <label for="title">Title</label>
+          <label for="title">Notes: </label> {{proposition.title}} <br/>
+	        <label for="thing">Change to: </label>
           <input name="title" type="text" ng-model="proposition.title" id="title" class="form-control" placeholder="Title" required>
           <div ng-messages="propositionForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Proposition title is required.</p>
           </div>
         </div>
 
-	<div class="form-group" show-errors>
-	  <label for="thing">Things</label>
-	  <select name="thing" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
-	  <div ng-messages="propositionForm.things.$error" role="alert">
-      	    <p class="help-block error-text" ng-message="required">Thing is required.</p>
-          </div>
-	</div>
-
         <div class="form-group">
           <input type="submit" value="Update" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
-          <strong ng-bind="error"></strong>
+        <strong ng-bind="error"></strong>
         </div>
       </fieldset>
     </form>

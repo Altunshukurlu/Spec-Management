@@ -41,10 +41,7 @@ exports.update = function (req, res) {
   var proposition = req.proposition;
 
   proposition.title = req.body.title;
-  console.log('req proposition: ' + proposition);
-  console.log('req proposition thing: ' + proposition.thing);
   proposition.thing = req.body.thing;
-  console.log('req proposition thing: ' + proposition.thing);
  // proposition.thing = req.
   proposition.save(function (err) {
     if (err) {
@@ -81,14 +78,14 @@ exports.list = function (req, res) {
     .populate('user', 'displayName')
     .populate('thing', 'title')
     .exec(function (err, proposition) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(proposition);
-    }
-  });
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(proposition);
+      }
+    });
 };
 
 
@@ -96,7 +93,6 @@ exports.list = function (req, res) {
  * Proposition middleware
  */
 exports.propositionByID = function (req, res, next, id) {
-  console.log('PropositionByID====================================================');
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Proposition is invalid'
@@ -106,16 +102,16 @@ exports.propositionByID = function (req, res, next, id) {
   Proposition.findById(id)
     .populate('user', 'displayName')
     .populate('thing', 'title')
+    .populate('propcreator', 'title')
     .exec(function (err, proposition) {
-    if (err) {
-      return next(err);
-    } else if (!proposition) {
-      return res.status(404).send({
-        message: 'No proposition  with that identifier has been found'
-      });
-    }
-    req.proposition = proposition;
-    next();
-  });
+      if (err) {
+        return next(err);
+      } else if (!proposition) {
+        return res.status(404).send({
+          message: 'No proposition  with that identifier has been found'
+        });
+      }
+      req.proposition = proposition;
+      next();
+    });
 };
-

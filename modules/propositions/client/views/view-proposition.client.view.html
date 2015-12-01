@@ -1,7 +1,8 @@
 <section ng-controller="PropositionsController" ng-init="findOne()">
   <div class="page-header">
     <h1 ng-bind="proposition.thing.title"></h1>
-    <h1 ng-bind="proposition.title"></h1>
+    <h2 ng-bind="proposition.propcreator.title"></h2>
+    <p ng-bind="proposition.title"></p>
   </div>
   <div class="pull-right" ng-show="authentication.user._id == proposition.user._id">
     <a class="btn btn-primary" ui-sref="propositions.edit({propositionId: proposition._id})">

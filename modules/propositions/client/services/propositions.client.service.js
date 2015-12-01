@@ -26,7 +26,6 @@ angular.module('propositions').factory('Things', ['$resource',
   }
 ]);
 
-/*
 angular.module('propositions').factory('Propcreators', ['$resource',
   function ($resource) {
     return $resource('api/propcreators/:propCId', {
@@ -38,4 +37,3 @@ angular.module('propositions').factory('Propcreators', ['$resource',
     });
   }
 ]);
-*/

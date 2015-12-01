@@ -3,12 +3,11 @@
 
 // Propositions controller
 angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions', 'Things', 'Propcreators',
-  function ($scope, $stateParams, $location, Authentication, Propositions, Things) {
-    
+  function ($scope, $stateParams, $location, Authentication, Propositions, Things, Propcreators) {
+
     $scope.authentication = Authentication;
     $scope.things = Things.query();
-    
-    //$scope.propcreators = Propcreators.query();
+    $scope.creators = Propcreators.query();
 
     // Create new proposition
     $scope.create = function (isValid) {
@@ -19,25 +18,26 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
         return false;
       }
 
-      // Create new Propositions object
+      // Create new Propositions objectG
       var proposition = new Propositions({
         title: this.title,
-        thing: this.selectedThing._id
-	//TODO: add others 
+        thing: this.selectedThing._id,
+        propcreator: this.selectedCreator._id
+	      //TODO: add others
       });
 
       // Redirect after save
       proposition.$save(function (response) {
         $location.path('propositions/' + response._id);
         $scope.title = '';
-	//$scope.selectedThing = null; 
-	//TODO: add other forms field 
+        //$scope.selectedThing = null;
+        //TODO: add other forms field
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Remove existing proposition 
+    // Remove existing proposition
     $scope.remove = function (proposition) {
       if (proposition) {
         proposition.$remove();
@@ -61,9 +61,10 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
         $scope.$broadcast('show-errors-check-validity', 'propositionForm');
         return false;
       }
-      console.log('selectedThing: ' + $scope.selectedThing.title);
+
       var proposition = $scope.proposition;
       proposition.thing = $scope.selectedThing._id;
+      proposition.propcreator = $scope.selectedCreator._id;
       var foundThing = false;
 /*
       angular.forEach($scope.things, function(thing){
@@ -73,7 +74,6 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
         }
       });
 */
-      console.log('proposition thing: '+ proposition.thing);
       proposition.$update(function () {
         $location.path('propositions/' + proposition._id);
       }, function (errorResponse) {
@@ -81,22 +81,9 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       });
     };
 
-    // Find a list of propositions 
-    $scope.find = function () { 
-      $scope.propositions = Propositions.query(
-/*
-        function(callbackdata){
-        var len = $scope.propositions.length; 
-        $scope.thingsForPropositions = []; 
-        var counter; 
-        for(counter = 0; counter < len; counter++){
-          $scope.thingsForPropositions[counter] = Things.get({
-            thingId: $scope.propositions[counter].thing
-          });
-        }
-        $scope.selectedThing = $scope.propositions[0];
-      }*/
-    );
+    // Find a list of propositions
+    $scope.find = function () {
+      $scope.propositions = Propositions.query();
     };
 
     // Find existing Propositions
@@ -104,20 +91,9 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       $scope.proposition = Propositions.get({
         propositionId: $stateParams.propositionId
       }, function(resData){
-        $scope.selectedThing = resData.thing.title;
+        //$scope.selectedThing = resData.thing.title;
+        //$scope.selectedCreator = resData.propcreator.title;
       });
-/*
-,function(callbackdata){
-        console.log($scope.proposition);
-        console.log('thingId: ' + $scope.proposition.thing);
-        $scope.thing = Things.get({
-          thingId: $scope.proposition.thing
-        });
-      });
-*/
     };
-    
   }
 ]);
-
-
