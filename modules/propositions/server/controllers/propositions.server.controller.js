@@ -77,6 +77,7 @@ exports.list = function (req, res) {
   Proposition.find().sort('-created')
     .populate('user', 'displayName')
     .populate('thing', 'title')
+    .populate('propcreator', 'title')
     .exec(function (err, proposition) {
       if (err) {
         return res.status(400).send({
