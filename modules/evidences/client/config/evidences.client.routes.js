@@ -17,9 +17,9 @@ angular.module('evidences').config(['$stateProvider',
       .state('evidences.create', {
         url: '/create',
         templateUrl: 'modules/evidences/client/views/create-evidence.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        //data: {
+        //  roles: ['user', 'admin']
+        //}
       })
       .state('evidences.view', {
         url: '/:evidenceId',
@@ -28,9 +28,9 @@ angular.module('evidences').config(['$stateProvider',
       .state('evidences.edit', {
         url: '/:evidenceId/edit',
         templateUrl: 'modules/evidences/client/views/edit-evidence.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        //data: {
+        //  roles: ['user', 'admin']
+        //}
       });
   }
 ]);
