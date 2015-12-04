@@ -1,0 +1,20 @@
+<section ng-controller="ArgumentsController" ng-init="find()">
+  <div class="page-header">
+    <h1>Arguments</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="argument in arguments" ui-sref="arguments.view({argumentId: argument._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="argument.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="argument.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="argument.title"></h4>
+      <p class="list-group-item-text" ng-bind="argument.content"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="arguments.$resolved && !arguments.length">
+    No arguments yet, why don't you <a ui-sref="arguments.create">create one</a>?
+  </div>
+</section>
