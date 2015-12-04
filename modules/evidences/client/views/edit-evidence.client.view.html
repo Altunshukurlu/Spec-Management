@@ -6,6 +6,24 @@
     <form name="evidenceForm" class="form-horizontal" ng-submit="update(evidenceForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
+
+	<label for="evidenceType"> Select Evidence Type: </label><br>
+    	<select name="evidenceType" ng-model="evidenceType">
+      		<option value="option-1">Software/system test results</option>
+      		<option value="option-2">Citations to external documents</option>
+		<option value="option-3">Experience reports by qualified stakeholders</option>
+      		<option value="option-4">From system operation</option>
+		<option value="option-5">Formal proofs</option>
+      		<option value="option-6">Certification of compliance</option>
+		<option value="option-7">Correctness of code with respect to given specifications</option>
+      		<option value="option-8">Software and system inspections</option>
+		<option value="option-9">Static analysis</option>
+		<option value="option-10">Simulation results</option>
+		<option value="option-11">Prototype results</option>
+		<option value="option-12">Customer/user survey results (user testing)</option>
+		<option value="option-13">Statistical analysis of data</option>
+    	</select><br><br>
+
           <label for="title">Title</label>
           <input name="title" type="text" ng-model="evidence.title" id="title" class="form-control" placeholder="" required>
           <div ng-messages="evidenceForm.title.$error" role="alert">
