@@ -2,8 +2,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects',
-  function ($scope, $stateParams, $location, Authentication, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', 'ProjectsForOtherModules',
+  function ($scope, $stateParams, $location, Authentication, Projects, ProjectsForOtherModules) {
     $scope.authentication = Authentication;
 
     // Create new project
@@ -45,6 +45,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         }
       } else {
         $scope.project.$remove(function () {
+          // remove project information from service
+          ProjectsForOtherModules.setCurProject({});
+          ProjectsForOtherModules.setProjId('');
           $location.path('projects');
         });
       }
@@ -78,6 +81,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     $scope.findOne = function () {
       $scope.project = Projects.get({
         projId: $stateParams.projId
+      }, function(){
+        ProjectsForOtherModules.setCurProject($scope.project);
+        // set the project id for other modules
+        ProjectsForOtherModules.setProjId($scope.project._id);
       });
     };
   }

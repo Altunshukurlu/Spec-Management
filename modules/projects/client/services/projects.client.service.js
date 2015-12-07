@@ -12,3 +12,22 @@ angular.module('projects').factory('Projects', ['$resource',
     });
   }
 ]);
+
+angular.module('projects').factory('ProjectsForOtherModules', function(){
+  var curProject = {};
+  var projectId = '';
+  return {
+    setProjId: function(pId) {
+      projectId = pId;
+    },
+    getProjId: function(){
+      return projectId;
+    },
+    setCurProject: function(proj){
+      curProject = proj;
+    },
+    getCurProject: function(){
+      return curProject;
+    }
+  };
+});

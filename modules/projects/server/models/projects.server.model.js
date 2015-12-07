@@ -20,7 +20,7 @@ var ProjectSchema = new Schema({
     trim: true,
     required: 'Title cannot be blank'
   },
-  content: {
+  notes: {
     type: String,
     default: '',
     trim: true
@@ -28,7 +28,12 @@ var ProjectSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  things: [Schema.ObjectId],
+  propositions: [Schema.ObjectId],
+  evidences: [Schema.ObjectId],
+  judgements: [Schema.ObjectId],
+  propocreators: [Schema.ObjectId]
 });
 
 mongoose.model('Projects', ProjectSchema);
