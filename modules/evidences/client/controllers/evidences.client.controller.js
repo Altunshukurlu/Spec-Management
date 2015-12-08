@@ -1,12 +1,16 @@
 'use strict';
 
 // Evidences controller
-angular.module('evidences').controller('EvidencesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Evidences',
-  function ($scope, $stateParams, $location, Authentication, Evidences) {
+angular.module('evidences').controller('EvidencesController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'Evidences',
+  'ProjectsForOtherModules',
+  function($scope, $stateParams, $location, Authentication, Evidences,
+    ProjectsForOtherModules) {
     $scope.authentication = Authentication;
-
+    $scope.projectId = ProjectsForOtherModules.getProjId();
+    //console.log($scope.projectId);
     // Create new Evidence
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -16,25 +20,26 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
       }
 
       // Create new Evidence object
-      var evidence = new Evidences({
+      var evidence = new Evidences.Evidence({
         title: this.title,
-        content: this.content
+        content: this.content,
+        project: ProjectsForOtherModules.getProjId()
       });
 
       // Redirect after save
-      evidence.$save(function (response) {
+      evidence.$save(function(response) {
         $location.path('evidences/' + response._id);
 
         // Clear form fields
         $scope.title = '';
         $scope.content = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Remove existing Evidence
-    $scope.remove = function (evidence) {
+    $scope.remove = function(evidence) {
       if (evidence) {
         evidence.$remove();
 
@@ -44,14 +49,14 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
           }
         }
       } else {
-        $scope.evidence.$remove(function () {
+        $scope.evidence.$remove(function() {
           $location.path('evidences');
         });
       }
     };
 
     // Update existing Evidence
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -62,22 +67,26 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
 
       var evidence = $scope.evidence;
 
-      evidence.$update(function () {
+      evidence.$update(function() {
         $location.path('evidences/' + evidence._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Find a list of Evidences
-    $scope.find = function () {
-      $scope.evidences = Evidences.query();
+    $scope.find = function() {
+      $scope.evidences = Evidences.Project.query({
+        projectId: ProjectsForOtherModules.getProjId()
+      });
     };
 
     // Find existing Evidence
-    $scope.findOne = function () {
-      $scope.evidence = Evidences.get({
+    $scope.findOne = function() {
+      $scope.evidence = Evidences.Evidence.get({
         evidenceId: $stateParams.evidenceId
+      }, function() {
+        //console.log($scope.evidence.project);
       });
     };
   }

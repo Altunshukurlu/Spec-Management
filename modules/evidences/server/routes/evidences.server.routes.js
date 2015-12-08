@@ -6,7 +6,7 @@
 var evidencesPolicy = require('../policies/evidences.server.policy'),
   evidences = require('../controllers/evidences.server.controller');
 
-module.exports = function (app) {
+module.exports = function(app) {
   // Evidences collection routes
   app.route('/api/evidences').all(evidencesPolicy.isAllowed)
     .get(evidences.list)
@@ -18,6 +18,10 @@ module.exports = function (app) {
     .put(evidences.update)
     .delete(evidences.delete);
 
+  app.get('/api/evidences/project/:projectId', function() {
+    console.log('Chong Tang: in evidence/project API');
+  });
   // Finish by binding the evidence middleware
   app.param('evidenceId', evidences.evidenceByID);
+  app.param('projectId', evidences.evidenceByProjectID);
 };

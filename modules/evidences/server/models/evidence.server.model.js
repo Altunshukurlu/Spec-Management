@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Evidence Schema
  */
 var EvidenceSchema = new Schema({
+  project: {
+    type: Schema.ObjectId,
+    ref: 'Project'
+  },
   created: {
     type: Date,
     default: Date.now
