@@ -23,6 +23,23 @@
     </div>
 	</div>
 
+  <div class="form-group" show-errors>
+		<label for="evidences">Evidence</label>
+		  <select name="evidences" ng-model="selectedEvidences" ng-options="evidence.title for evidence in evidences" required> </select>
+		   <div ng-messages="propositionForm.evidences.$error" role="alert">
+         <p class="help-block error-text" ng-message="required">Evidence is required.</p>
+       </div>
+	</div>
+
+
+  <div class="form-group" show-errors>
+		<label for="judgements">Judgements</label>
+		  <select name="judgements" ng-model="selectedJudgements" ng-options="judgement.title for judgement in judgements" required> </select>
+		   <div ng-messages="propositionForm.judgements.$error" role="alert">
+         <p class="help-block error-text" ng-message="required">Judgement is required.</p>
+       </div>
+	</div>
+  
       <div class="form-group" show-errors>
           <label for="title">Note</label>
           <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>

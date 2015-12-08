@@ -37,3 +37,29 @@ angular.module('propositions').factory('Propcreators', ['$resource',
     });
   }
 ]);
+
+
+angular.module('propositions').factory('Evidences', ['$resource',
+  function ($resource) {
+    return $resource('api/evidences/:evidenceId', {
+      evidenceId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+
+angular.module('propositions').factory('Judgements', ['$resource',
+  function ($resource) {
+    return $resource('api/judgements/:judgementId', {
+      judgementId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);

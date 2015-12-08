@@ -1,7 +1,9 @@
 <section ng-controller="PropositionsController" ng-init="findOne()">
   <div class="page-header">
-    <h1 ng-bind="proposition.thing.title"></h1>
+    <h2 ng-bind="proposition.thing.title"></h2>
     <h2 ng-bind="proposition.propcreator.title"></h2>
+    <h2 ng-bind="proposition.evidences.title"></h2>
+    <h2 ng-bind="proposition.judgements.title"></h2>
     <p ng-bind="proposition.title"></p>
   </div>
   <div class="pull-right" ng-show="authentication.user._id == proposition.user._id">
@@ -13,6 +15,11 @@
     </a>
   </div>
   <small>
+
+    <a class="btn btn-primary" ui-sref="judgements.create({judgementId: judgements._id})">Add Judgement
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    
     <em class="text-muted">
       Posted on
       <span ng-bind="proposition.created | date:'mediumDate'"></span>
