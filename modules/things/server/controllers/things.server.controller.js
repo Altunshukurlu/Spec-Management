@@ -88,8 +88,6 @@ exports.list = function(req, res) {
 };
 
 exports.thingsByProjectID = function(req, res, next, projectId) {
-  console.log('Chong Tang, projectId = ' + projectId);
-
   if (!mongoose.Types.ObjectId.isValid(projectId)) {
     return res.status(400).send({
       message: 'projectId is invalid'
@@ -106,8 +104,6 @@ exports.thingsByProjectID = function(req, res, next, projectId) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //console.log('Chong Tang: In thingsByProjectID');
-        //console.log(things);
         res.json(things);
       }
     });
