@@ -94,16 +94,16 @@ exports.thingsByProjectID = function (req, res, next, projectId) {
     });
   }
   Thing.find()
-    .where({'project': projectId})
+    .where({ 'project': projectId })
     .sort('-created').populate('user', 'displayName').exec(function (err, things) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(things);
-    }
-  });
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(things);
+      }
+    });
 };
 
 /**
