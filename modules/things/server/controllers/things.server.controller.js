@@ -86,6 +86,25 @@ exports.list = function (req, res) {
   });
 };
 
+exports.thingsByProjectID = function (req, res, next, projectId) {
+  console.log('Chong Tang, projectId = ' + projectId);
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    return res.status(400).send({
+      message: 'projectId is invalid'
+    });
+  }
+  Thing.find()
+    .where({'project': projectId})
+    .sort('-created').populate('user', 'displayName').exec(function (err, things) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(things);
+    }
+  });
+};
 
 /**
  * Thing middleware

@@ -6,7 +6,7 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
   function ($scope, $stateParams, $location, Authentication, Propositions, Things, Propcreators) {
 
     $scope.authentication = Authentication;
-    $scope.things = Things.query();
+    $scope.things = Things.Things.query();
     $scope.creators = Propcreators.query();
 
     // Create new proposition

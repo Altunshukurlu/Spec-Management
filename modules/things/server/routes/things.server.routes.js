@@ -12,6 +12,11 @@ module.exports = function (app) {
     .get(things.list)
     .post(things.create);
 
+  // Things collection routes
+  app.get('/api/things/thingsByProjectId/:projectId', function(){
+    console.log('Chong Tang, In thingsByProjectId API');
+  });
+
   // Single thing routes
   app.route('/api/things/:thingId').all(thingsPolicy.isAllowed)
     .get(things.read)
@@ -20,4 +25,5 @@ module.exports = function (app) {
 
   // Finish by binding the thing middleware
   app.param('thingId', things.thingByID);
+  app.param('projectId', things.thingsByProjectID);
 };

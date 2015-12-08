@@ -2,8 +2,8 @@
 'use strict';
 
 // Things controller
-angular.module('things').controller('ThingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Things',
-  function ($scope, $stateParams, $location, Authentication, Things) {
+angular.module('things').controller('ThingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Things', 'ProjectsForOtherModules',
+  function ($scope, $stateParams, $location, Authentication, Things, ProjectsForOtherModules) {
     $scope.authentication = Authentication;
 
     // Create new thing
@@ -17,9 +17,10 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
       }
 
       // Create new Things object
-      var thing = new Things({
+      var thing = new Things.Things({
         title: this.title,
-        content: this.content
+        content: this.content,
+        project: ProjectsForOtherModules.getProjId()
       });
 
       // Redirect after save
@@ -71,12 +72,15 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
 
     // Find a list of Things 
     $scope.find = function () { 
-      $scope.things = Things.query();
+      $scope.things = Things.ThingsByProject.query({
+        projectId: ProjectsForOtherModules.getProjId()
+      }, function(){
+      });
     };
 
     // Find existing Things
     $scope.findOne = function () {
-      $scope.thing = Things.get({
+      $scope.thing = Things.Things.get({
         thingId: $stateParams.thingId
       });
     };
