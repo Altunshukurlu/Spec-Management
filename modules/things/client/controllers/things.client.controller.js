@@ -1,13 +1,15 @@
-
 'use strict';
 
 // Things controller
-angular.module('things').controller('ThingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Things', 'ProjectsForOtherModules',
-  function ($scope, $stateParams, $location, Authentication, Things, ProjectsForOtherModules) {
+angular.module('things').controller('ThingsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'Things',
+  'ProjectsForOtherModules',
+  function($scope, $stateParams, $location, Authentication, Things,
+    ProjectsForOtherModules) {
     $scope.authentication = Authentication;
 
     // Create new thing
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -17,26 +19,26 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
       }
 
       // Create new Things object
-      var thing = new Things.Things({
+      var thing = new Things.thing({
         title: this.title,
         content: this.content,
         project: ProjectsForOtherModules.getProjId()
       });
 
       // Redirect after save
-      thing.$save(function (response) {
+      thing.$save(function(response) {
         $location.path('things/' + response._id);
 
         // Clear form fields
         $scope.title = '';
         $scope.content = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Remove existing thing 
-    $scope.remove = function (thing) {
+    // Remove existing thing
+    $scope.remove = function(thing) {
       if (thing) {
         thing.$remove();
         for (var i in $scope.thing) {
@@ -45,14 +47,14 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
           }
         }
       } else {
-        $scope.thing.$remove(function () {
+        $scope.thing.$remove(function() {
           $location.path('things');
         });
       }
     };
 
     // Update existing Thing
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -63,24 +65,24 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
 
       var thing = $scope.thing;
 
-      thing.$update(function () {
+      thing.$update(function() {
         $location.path('things/' + thing._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Find a list of Things 
-    $scope.find = function () { 
-      $scope.things = Things.ThingsByProject.query({
+    // Find a list of Things
+    $scope.find = function() {
+      $scope.things = Things.project.query({
         projectId: ProjectsForOtherModules.getProjId()
-      }, function(){
-      });
+      }, function() {});
     };
 
     // Find existing Things
-    $scope.findOne = function () {
-      $scope.thing = Things.Things.get({
+    $scope.findOne = function() {
+      console.log('Chong Tang: In findOne()');
+      $scope.thing = Things.thing.get({
         thingId: $stateParams.thingId
       });
     };

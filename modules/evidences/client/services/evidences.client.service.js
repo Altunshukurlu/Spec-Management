@@ -4,16 +4,16 @@
 angular.module('evidences').factory('Evidences', ['$resource',
   function($resource) {
     return {
-      Evidence: $resource('api/evidences/:evidenceId', {
+      evidence: $resource('api/evidences/:evidenceId', {
         evidenceId: '@_id'
       }, {
         update: {
           method: 'PUT'
         }
       }),
-      Project: $resource('api/evidences/project/:projectId', {
+      project: $resource('api/evidences/project/:projectId', {
         projectId: '@_id'
-      }),
+      })
     };
   }
 ]);

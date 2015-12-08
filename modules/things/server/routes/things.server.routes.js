@@ -6,16 +6,11 @@
 var thingsPolicy = require('../policies/things.server.policy'),
   things = require('../controllers/things.server.controller');
 
-module.exports = function (app) {
+module.exports = function(app) {
   // Things collection routes
   app.route('/api/things').all(thingsPolicy.isAllowed)
     .get(things.list)
     .post(things.create);
-
-  // Things collection routes
-  app.get('/api/things/thingsByProjectId/:projectId', function(){
-    console.log('Chong Tang, In thingsByProjectId API');
-  });
 
   // Single thing routes
   app.route('/api/things/:thingId').all(thingsPolicy.isAllowed)
@@ -23,7 +18,14 @@ module.exports = function (app) {
     .put(things.update)
     .delete(things.delete);
 
+  // Things collection routes
+  app.get('/api/things/project/:projectId', function(req, res, next) {
+    console.log('Chong Tang, In thingsByProjectId API. projectId = ' +
+      req.params.projectId);
+    things.thingsByProjectID(req, res, next, req.params.projectId);
+  });
+
   // Finish by binding the thing middleware
   app.param('thingId', things.thingByID);
-  app.param('projectId', things.thingsByProjectID);
+  //app.param('projectId', things.thingsByProjectID);
 };

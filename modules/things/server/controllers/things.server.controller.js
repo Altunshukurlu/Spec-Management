@@ -1,4 +1,3 @@
-
 'use strict';
 
 /**
@@ -7,16 +6,17 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Thing = mongoose.model('Thing'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  errorHandler = require(path.resolve(
+    './modules/core/server/controllers/errors.server.controller'));
 
 /**
  * Create a Thing
  */
-exports.create = function (req, res) {
+exports.create = function(req, res) {
   var thing = new Thing(req.body);
   thing.user = req.user;
 
-  thing.save(function (err) {
+  thing.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -30,20 +30,20 @@ exports.create = function (req, res) {
 /**
  * Show the current article
  */
-exports.read = function (req, res) {
+exports.read = function(req, res) {
   res.json(req.thing);
 };
 
 /**
  * Update a thing
  */
-exports.update = function (req, res) {
+exports.update = function(req, res) {
   var thing = req.thing;
 
   thing.title = req.body.title;
   thing.content = req.body.content;
 
-  thing.save(function (err) {
+  thing.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -57,10 +57,10 @@ exports.update = function (req, res) {
 /**
  * Delete a thing
  */
-exports.delete = function (req, res) {
+exports.delete = function(req, res) {
   var thing = req.thing;
 
-  thing.remove(function (err) {
+  thing.remove(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -74,8 +74,9 @@ exports.delete = function (req, res) {
 /**
  * List of Things
  */
-exports.list = function (req, res) {
-  Thing.find().sort('-created').populate('user', 'displayName').exec(function (err, things) {
+exports.list = function(req, res) {
+  Thing.find().sort('-created').populate('user', 'displayName').exec(function(
+    err, things) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -86,30 +87,37 @@ exports.list = function (req, res) {
   });
 };
 
-exports.thingsByProjectID = function (req, res, next, projectId) {
+exports.thingsByProjectID = function(req, res, next, projectId) {
   console.log('Chong Tang, projectId = ' + projectId);
+
   if (!mongoose.Types.ObjectId.isValid(projectId)) {
     return res.status(400).send({
       message: 'projectId is invalid'
     });
   }
   Thing.find()
-    .where({'project': projectId})
-    .sort('-created').populate('user', 'displayName').exec(function (err, things) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(things);
-    }
-  });
+    .where({
+      'project': projectId
+    })
+    .sort('-created').populate('user', 'displayName').exec(function(err,
+      things) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        //console.log('Chong Tang: In thingsByProjectID');
+        //console.log(things);
+        res.json(things);
+      }
+    });
 };
 
 /**
  * Thing middleware
  */
-exports.thingByID = function (req, res, next, id) {
+exports.thingByID = function(req, res, next, id) {
+  console.log('Chong Tang: in thingByID(). id = ' + id);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
@@ -117,7 +125,7 @@ exports.thingByID = function (req, res, next, id) {
     });
   }
 
-  Thing.findById(id).populate('user', 'displayName').exec(function (err, thing) {
+  Thing.findById(id).populate('user', 'displayName').exec(function(err, thing) {
     if (err) {
       return next(err);
     } else if (!thing) {

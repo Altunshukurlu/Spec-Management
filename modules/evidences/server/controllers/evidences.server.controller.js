@@ -76,6 +76,7 @@ exports.delete = function(req, res) {
  * List of Evidences
  */
 exports.list = function(req, res) {
+  console.log('Chong Tang: In evidence list function');
   Evidence.find().sort('-created').populate('user', 'displayName').exec(
     function(err, evidences) {
       if (err) {
@@ -89,6 +90,8 @@ exports.list = function(req, res) {
 };
 
 exports.evidenceByProjectID = function(req, res, next, projectId) {
+  console.log('Chong Tang: In evidenceByProjectID function, projectId = ' +
+    projectId);
   Evidence.find()
     .where({
       'project': projectId

@@ -20,7 +20,7 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
       }
 
       // Create new Evidence object
-      var evidence = new Evidences.Evidence({
+      var evidence = new Evidences.evidence({
         title: this.title,
         content: this.content,
         project: ProjectsForOtherModules.getProjId()
@@ -76,14 +76,14 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
 
     // Find a list of Evidences
     $scope.find = function() {
-      $scope.evidences = Evidences.Project.query({
+      $scope.evidences = Evidences.project.query({
         projectId: ProjectsForOtherModules.getProjId()
       });
     };
 
     // Find existing Evidence
     $scope.findOne = function() {
-      $scope.evidence = Evidences.Evidence.get({
+      $scope.evidence = Evidences.evidence.get({
         evidenceId: $stateParams.evidenceId
       }, function() {
         //console.log($scope.evidence.project);
