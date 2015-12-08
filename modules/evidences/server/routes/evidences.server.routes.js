@@ -8,8 +8,6 @@ var evidencesPolicy = require('../policies/evidences.server.policy'),
 
 module.exports = function(app) {
   app.get('/api/evidences/project/:projectId', function(req, res, next) {
-    console.log('Chong Tang: in evidence/project API. projectId = ' + req
-      .params.projectId);
     evidences.evidenceByProjectID(req, res, next, req.params.projectId);
   });
 

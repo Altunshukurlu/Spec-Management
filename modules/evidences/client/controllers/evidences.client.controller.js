@@ -2,9 +2,9 @@
 
 // Evidences controller
 angular.module('evidences').controller('EvidencesController', ['$scope',
-  '$stateParams', '$location', 'Authentication', 'Evidences',
+  '$stateParams', '$location', 'Authentication', 'EvidenceFactory',
   'ProjectsForOtherModules',
-  function($scope, $stateParams, $location, Authentication, Evidences,
+  function($scope, $stateParams, $location, Authentication, EvidenceFactory,
     ProjectsForOtherModules) {
     $scope.authentication = Authentication;
     $scope.projectId = ProjectsForOtherModules.getProjId();
@@ -20,7 +20,7 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
       }
 
       // Create new Evidence object
-      var evidence = new Evidences.evidence({
+      var evidence = new EvidenceFactory.evidence({
         title: this.title,
         content: this.content,
         project: ProjectsForOtherModules.getProjId()
@@ -76,14 +76,14 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
 
     // Find a list of Evidences
     $scope.find = function() {
-      $scope.evidences = Evidences.project.query({
+      $scope.evidences = EvidenceFactory.project.query({
         projectId: ProjectsForOtherModules.getProjId()
       });
     };
 
     // Find existing Evidence
     $scope.findOne = function() {
-      $scope.evidence = Evidences.evidence.get({
+      $scope.evidence = EvidenceFactory.evidence.get({
         evidenceId: $stateParams.evidenceId
       }, function() {
         //console.log($scope.evidence.project);

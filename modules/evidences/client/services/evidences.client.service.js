@@ -1,7 +1,7 @@
 'use strict';
 
 //Evidences service used for communicating with the evidences REST endpoints
-angular.module('evidences').factory('Evidences', ['$resource',
+angular.module('evidences').factory('EvidenceFactory', ['$resource',
   function($resource) {
     return {
       evidence: $resource('api/evidences/:evidenceId', {
