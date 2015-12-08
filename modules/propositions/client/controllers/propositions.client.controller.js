@@ -2,12 +2,15 @@
 'use strict';
 
 // Propositions controller
-angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions', 'Things', 'Propcreators',
-  function ($scope, $stateParams, $location, Authentication, Propositions, Things, Propcreators) {
+angular.module('propositions').controller('PropositionsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propositions', 'Things', 'Propcreators','Evidences','Judgements',
+  function ($scope, $stateParams, $location, Authentication, Propositions, Things, Propcreators,Evidences,Judgements) {
 
     $scope.authentication = Authentication;
     $scope.things = Things.Things.query();
     $scope.creators = Propcreators.query();
+    $scope.evidences = Evidences.query();
+    $scope.judgements = Judgements.query();
+    
 
     // Create new proposition
     $scope.create = function (isValid) {
@@ -22,7 +25,9 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       var proposition = new Propositions({
         title: this.title,
         thing: this.selectedThing._id,
-        propcreator: this.selectedCreator._id
+        propcreator: this.selectedCreator._id,
+        evidences: this.selectedEvidences._id,
+        judgements:this.selectedJudgements._id
 	      //TODO: add others
       });
 
@@ -65,6 +70,8 @@ angular.module('propositions').controller('PropositionsController', ['$scope', '
       var proposition = $scope.proposition;
       proposition.thing = $scope.selectedThing._id;
       proposition.propcreator = $scope.selectedCreator._id;
+      proposition.evidences = $scope.selectedEvidences._id;
+      proposition.judgements = $scope.selectedJudgements._id;
       var foundThing = false;
 /*
       angular.forEach($scope.things, function(thing){

@@ -28,6 +28,14 @@ var PropositionSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Propcreator'
   },
+  evidences: { 
+    type: Schema.ObjectId,
+    ref: 'Evidence'
+  },
+  judgements: { 
+    type: Schema.ObjectId,
+    ref: 'Judgements'
+  },
   user: {
     type: Schema.ObjectId,
     ref: 'User'

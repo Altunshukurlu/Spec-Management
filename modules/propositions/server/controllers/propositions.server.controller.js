@@ -1,4 +1,5 @@
 
+
 'use strict';
 
 /**
@@ -78,6 +79,8 @@ exports.list = function (req, res) {
     .populate('user', 'displayName')
     .populate('thing', 'title')
     .populate('propcreator', 'title')
+    .populate('evidences', 'title')
+    .populate('judgements', 'title')
     .exec(function (err, proposition) {
       if (err) {
         return res.status(400).send({
@@ -104,6 +107,8 @@ exports.propositionByID = function (req, res, next, id) {
     .populate('user', 'displayName')
     .populate('thing', 'title')
     .populate('propcreator', 'title')
+    .populate('evidences', 'title')
+    .populate('judgements', 'title')
     .exec(function (err, proposition) {
       if (err) {
         return next(err);
