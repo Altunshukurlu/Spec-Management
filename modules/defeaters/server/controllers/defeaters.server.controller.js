@@ -6,23 +6,23 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  Argument = mongoose.model('Argument'),
+  Defeater = mongoose.model('Defeater'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
- * Create a Argument
+ * Create a Defeater
  */
 exports.create = function (req, res) {
-  var argument = new Argument(req.body);
-  argument.user = req.user;
+  var defeater = new Defeater(req.body);
+  defeater.user = req.user;
 
-  argument.save(function (err) {
+  defeater.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(argument);
+      res.json(defeater);
     }
   });
 };
@@ -31,82 +31,82 @@ exports.create = function (req, res) {
  * Show the current article
  */
 exports.read = function (req, res) {
-  res.json(req.argument);
+  res.json(req.defeater);
 };
 
 /**
- * Update a argument
+ * Update a defeater
  */
 exports.update = function (req, res) {
-  var argument = req.argument;
+  var defeater = req.defeater;
 
-  argument.title = req.body.title;
-  argument.content = req.body.content;
+  defeater.title = req.body.title;
+  defeater.content = req.body.content;
 
-  argument.save(function (err) {
+  defeater.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(argument);
+      res.json(defeater);
     }
   });
 };
 
 /**
- * Delete a argument
+ * Delete a defeater
  */
 exports.delete = function (req, res) {
-  var argument = req.argument;
+  var defeater = req.defeater;
 
-  argument.remove(function (err) {
+  defeater.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(argument);
+      res.json(defeater);
     }
   });
 };
 
 /**
- * List of Arguments
+ * List of Defeaters
  */
 exports.list = function (req, res) {
-  Argument.find().sort('-created').populate('user', 'displayName').exec(function (err, argmnts) {
+  Defeater.find().sort('-created').populate('user', 'displayName').exec(function (err, defeaters) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(argmnts);
+      res.json(defeaters);
     }
   });
 };
 
 
 /**
- * Argument middleware
+ * Defeater middleware
  */
-exports.argumentByID = function (req, res, next, id) {
+exports.defeaterByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Argument is invalid'
+      message: 'Defeater is invalid'
     });
   }
 
-  Argument.findById(id).populate('user', 'displayName').exec(function (err, argument) {
+  Defeater.findById(id).populate('user', 'displayName').exec(function (err, defeater) {
     if (err) {
       return next(err);
-    } else if (!argument) {
+    } else if (!defeater) {
       return res.status(404).send({
-        message: 'No argument  with that identifier has been found'
+        message: 'No defeater  with that identifier has been found'
       });
     }
-    req.argument = argument;
+    req.defeater = defeater;
     next();
   });
 };

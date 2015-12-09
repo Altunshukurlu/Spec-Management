@@ -1,15 +1,15 @@
-<section ng-controller="ArgumentsController">
+<section ng-controller="DefeatersController">
   <div class="page-header">
-    <h1>New Argument</h1>
+    <h1>New Defeater</h1>
   </div>
   <div class="col-md-12">
-    <form name="argumentForm" class="form-horizontal" ng-submit="create(argumentForm.$valid)" novalidate>
+    <form name="defeaterForm" class="form-horizontal" ng-submit="create(defeaterForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
           <label for="title">Title</label>
           <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
-          <div ng-messages="argumentForm.title.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Argument title is required.</p>
+          <div ng-messages="defeaterForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Defeater title is required.</p>
           </div>
         </div>
         <div class="form-group">

@@ -7,9 +7,9 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Argument Schema
+ * Defeater Schema
  */
-var ArgumentSchema = new Schema({
+var DefeaterSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
@@ -31,4 +31,4 @@ var ArgumentSchema = new Schema({
   }
 });
 
-mongoose.model('Argument', ArgumentSchema);
+mongoose.model('Defeater', DefeaterSchema);

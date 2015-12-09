@@ -15,28 +15,28 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/arguments',
+      resources: '/api/defeaters',
       permissions: '*'
     }, {
-      resources: '/api/arguments/:argumentId',
+      resources: '/api/defeaters/:defeaterId',
       permissions: '*'
     }]
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/arguments',
+      resources: '/api/defeaters',
       permissions: ['get', 'post']
     }, {
-      resources: '/api/arguments/:argumentId',
+      resources: '/api/defeaters/:defeaterId',
       permissions: ['get']
     }]
   }, {
     roles: ['guest'],
     allows: [{
-      resources: '/api/arguments',
+      resources: '/api/defeaters',
       permissions: ['get']
     }, {
-      resources: '/api/arguments:argumentId',
+      resources: '/api/defeaters:defeaterId',
       permissions: ['get']
     }]
   }]);
@@ -49,7 +49,7 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If an article is being processed and the current user created it then allow any manipulation
-  if (req.argument && req.user && req.argument.user.id === req.user.id) {
+  if (req.defeater && req.user && req.defeater.user.id === req.user.id) {
     return next();
   }
 
