@@ -7,10 +7,6 @@ var evidencesPolicy = require('../policies/evidences.server.policy'),
   evidences = require('../controllers/evidences.server.controller');
 
 module.exports = function(app) {
-  app.get('/api/evidences/project/:projectId', function(req, res, next) {
-    evidences.evidenceByProjectID(req, res, next, req.params.projectId);
-  });
-
   // Evidences collection routes
   app.route('/api/evidences').all(evidencesPolicy.isAllowed)
     .get(evidences.list)
@@ -22,6 +18,9 @@ module.exports = function(app) {
     .put(evidences.update)
     .delete(evidences.delete);
 
+  app.get('/api/evidences/project/:projectId', function(req, res, next) {
+    evidences.evidencesByProjectID(req, res, next, req.params.projectId);
+  });
   // Finish by binding the evidence middleware
   app.param('evidenceId', evidences.evidenceByID);
   //app.param('projectId', evidences.evidenceByProjectID);

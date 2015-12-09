@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 /**
@@ -8,16 +6,17 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Proposition = mongoose.model('Proposition'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  errorHandler = require(path.resolve(
+    './modules/core/server/controllers/errors.server.controller'));
 
 /**
  * Create a Proposition
  */
-exports.create = function (req, res) {
+exports.create = function(req, res) {
   var proposition = new Proposition(req.body);
   proposition.user = req.user;
 
-  proposition.save(function (err) {
+  proposition.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -31,20 +30,20 @@ exports.create = function (req, res) {
 /**
  * Show the current article
  */
-exports.read = function (req, res) {
+exports.read = function(req, res) {
   res.json(req.proposition);
 };
 
 /**
  * Update a proposition
  */
-exports.update = function (req, res) {
+exports.update = function(req, res) {
   var proposition = req.proposition;
 
   proposition.title = req.body.title;
   proposition.thing = req.body.thing;
- // proposition.thing = req.
-  proposition.save(function (err) {
+  // proposition.thing = req.
+  proposition.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -58,9 +57,9 @@ exports.update = function (req, res) {
 /**
  * Delete a Proposition
  */
-exports.delete = function (req, res) {
+exports.delete = function(req, res) {
   var proposition = req.proposition;
-  proposition.remove(function (err) {
+  proposition.remove(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -74,14 +73,36 @@ exports.delete = function (req, res) {
 /**
  * List of Propositions
  */
-exports.list = function (req, res) {
+exports.list = function(req, res) {
   Proposition.find().sort('-created')
     .populate('user', 'displayName')
     .populate('thing', 'title')
     .populate('propcreator', 'title')
     .populate('evidences', 'title')
     .populate('judgements', 'title')
-    .exec(function (err, proposition) {
+    .exec(function(err, proposition) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(proposition);
+      }
+    });
+};
+
+exports.propositionsByProjectID = function(req, res, next, projectId) {
+  Proposition.find()
+    .where({
+      project: projectId
+    })
+    .sort('-created')
+    .populate('user', 'displayName')
+    .populate('thing', 'title')
+    .populate('propcreator', 'title')
+    .populate('evidences', 'title')
+    .populate('judgements', 'title')
+    .exec(function(err, proposition) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
@@ -96,7 +117,7 @@ exports.list = function (req, res) {
 /**
  * Proposition middleware
  */
-exports.propositionByID = function (req, res, next, id) {
+exports.propositionByID = function(req, res, next, id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Proposition is invalid'
@@ -109,7 +130,7 @@ exports.propositionByID = function (req, res, next, id) {
     .populate('propcreator', 'title')
     .populate('evidences', 'title')
     .populate('judgements', 'title')
-    .exec(function (err, proposition) {
+    .exec(function(err, proposition) {
       if (err) {
         return next(err);
       } else if (!proposition) {

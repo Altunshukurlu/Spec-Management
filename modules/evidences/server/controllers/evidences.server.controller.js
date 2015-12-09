@@ -88,7 +88,7 @@ exports.list = function(req, res) {
     });
 };
 
-exports.evidenceByProjectID = function(req, res, next, projectId) {
+exports.evidencesByProjectID = function(req, res, next, projectId) {
   Evidence.find()
     .where({
       'project': projectId

@@ -20,8 +20,6 @@ module.exports = function(app) {
 
   // Things collection routes
   app.get('/api/things/project/:projectId', function(req, res, next) {
-    console.log('Chong Tang, In thingsByProjectId API. projectId = ' +
-      req.params.projectId);
     things.thingsByProjectID(req, res, next, req.params.projectId);
   });
 

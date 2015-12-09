@@ -93,6 +93,7 @@ exports.thingsByProjectID = function(req, res, next, projectId) {
       message: 'projectId is invalid'
     });
   }
+
   Thing.find()
     .where({
       'project': projectId
@@ -113,8 +114,6 @@ exports.thingsByProjectID = function(req, res, next, projectId) {
  * Thing middleware
  */
 exports.thingByID = function(req, res, next, id) {
-  console.log('Chong Tang: in thingByID(). id = ' + id);
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Thing is invalid'

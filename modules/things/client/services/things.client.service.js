@@ -1,8 +1,7 @@
-
 'use strict';
 
 //Things service used for communicating with the things REST endpoints
-angular.module('things').factory('Things', ['$resource',
+angular.module('things').factory('ThingFactory', ['$resource',
   function($resource) {
     return {
       thing: $resource('api/things/:thingId', {

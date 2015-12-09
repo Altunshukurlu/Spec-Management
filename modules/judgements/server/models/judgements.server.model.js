@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Judgement Schema
  */
 var JudgementSchema = new Schema({
+  project: {
+    type: Schema.ObjectId,
+    ref: 'Project'
+  },
   created: {
     type: Date,
     default: Date.now

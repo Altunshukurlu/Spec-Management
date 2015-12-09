@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', 'ProjectsForOtherModules',
-  function ($scope, $state, Authentication, Menus, ProjectsForOtherModules) {
+angular.module('core').controller('HeaderController', ['$scope', '$state',
+  'Authentication', 'Menus', 'CurProjectFactory',
+  function($scope, $state, Authentication, Menus, CurProjectFactory) {
     // Expose view variables
     $scope.$state = $state;
     $scope.authentication = Authentication;
@@ -11,17 +12,17 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
     // Toggle the menu items
     $scope.isCollapsed = false;
-    $scope.toggleCollapsibleMenu = function () {
+    $scope.toggleCollapsibleMenu = function() {
       $scope.isCollapsed = !$scope.isCollapsed;
     };
 
     // Collapsing the menu after navigation
-    $scope.$on('$stateChangeSuccess', function () {
+    $scope.$on('$stateChangeSuccess', function() {
       $scope.isCollapsed = false;
     });
 
-    $scope.projectIsSet = function(){
-      return ProjectsForOtherModules.getProjId() !== '';
+    $scope.projectIsSet = function() {
+      return CurProjectFactory.getProjId() !== '';
     };
   }
 ]);

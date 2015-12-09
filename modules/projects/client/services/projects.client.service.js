@@ -2,7 +2,7 @@
 
 //Projects service used for communicating with the projects REST endpoints
 angular.module('projects').factory('Projects', ['$resource',
-  function ($resource) {
+  function($resource) {
     return $resource('api/projects/:projId', {
       projId: '@_id'
     }, {
@@ -13,20 +13,20 @@ angular.module('projects').factory('Projects', ['$resource',
   }
 ]);
 
-angular.module('projects').factory('ProjectsForOtherModules', function(){
+angular.module('projects').factory('CurProjectFactory', function() {
   var curProject = {};
   var projectId = '';
   return {
     setProjId: function(pId) {
       projectId = pId;
     },
-    getProjId: function(){
+    getProjId: function() {
       return projectId;
     },
-    setCurProject: function(proj){
+    setCurProject: function(proj) {
       curProject = proj;
     },
-    getCurProject: function(){
+    getCurProject: function() {
       return curProject;
     }
   };

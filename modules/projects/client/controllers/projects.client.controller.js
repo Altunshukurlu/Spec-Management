@@ -1,13 +1,15 @@
-
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', 'ProjectsForOtherModules',
-  function ($scope, $stateParams, $location, Authentication, Projects, ProjectsForOtherModules) {
+angular.module('projects').controller('ProjectsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'Projects',
+  'CurProjectFactory',
+  function($scope, $stateParams, $location, Authentication, Projects,
+    CurProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new project
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -23,19 +25,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       });
 
       // Redirect after save
-      project.$save(function (response) {
+      project.$save(function(response) {
         $location.path('projects/' + response._id);
 
         // Clear form fields
         $scope.title = '';
         $scope.content = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Remove existing project
-    $scope.remove = function (project) {
+    $scope.remove = function(project) {
       if (project) {
         project.$remove();
         for (var i in $scope.project) {
@@ -44,17 +46,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           }
         }
       } else {
-        $scope.project.$remove(function () {
+        $scope.project.$remove(function() {
           // remove project information from service
-          ProjectsForOtherModules.setCurProject({});
-          ProjectsForOtherModules.setProjId('');
+          CurProjectFactory.setCurProject({});
+          CurProjectFactory.setProjId('');
           $location.path('projects');
         });
       }
     };
 
     // Update existing Project
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -65,26 +67,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       var project = $scope.project;
 
-      project.$update(function () {
+      project.$update(function() {
         $location.path('projects/' + project._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Find a list of Projects
-    $scope.find = function () {
+    $scope.find = function() {
       $scope.projects = Projects.query();
     };
 
     // Find existing Projects
-    $scope.findOne = function () {
+    $scope.findOne = function() {
       $scope.project = Projects.get({
         projId: $stateParams.projId
-      }, function(){
-        ProjectsForOtherModules.setCurProject($scope.project);
+      }, function() {
+        CurProjectFactory.setCurProject($scope.project);
         // set the project id for other modules
-        ProjectsForOtherModules.setProjId($scope.project._id);
+        CurProjectFactory.setProjId($scope.project._id);
       });
     };
   }

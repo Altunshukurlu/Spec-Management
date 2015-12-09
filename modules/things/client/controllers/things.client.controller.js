@@ -2,10 +2,10 @@
 
 // Things controller
 angular.module('things').controller('ThingsController', ['$scope',
-  '$stateParams', '$location', 'Authentication', 'Things',
-  'ProjectsForOtherModules',
-  function($scope, $stateParams, $location, Authentication, Things,
-    ProjectsForOtherModules) {
+  '$stateParams', '$location', 'Authentication', 'ThingFactory',
+  'CurProjectFactory',
+  function($scope, $stateParams, $location, Authentication, ThingFactory,
+    CurProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new thing
@@ -19,10 +19,10 @@ angular.module('things').controller('ThingsController', ['$scope',
       }
 
       // Create new Things object
-      var thing = new Things.thing({
+      var thing = new ThingFactory.thing({
         title: this.title,
         content: this.content,
-        project: ProjectsForOtherModules.getProjId()
+        project: CurProjectFactory.getProjId()
       });
 
       // Redirect after save
@@ -59,7 +59,6 @@ angular.module('things').controller('ThingsController', ['$scope',
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'thingForm');
-
         return false;
       }
 
@@ -74,15 +73,14 @@ angular.module('things').controller('ThingsController', ['$scope',
 
     // Find a list of Things
     $scope.find = function() {
-      $scope.things = Things.project.query({
-        projectId: ProjectsForOtherModules.getProjId()
+      $scope.things = ThingFactory.project.query({
+        projectId: CurProjectFactory.getProjId()
       }, function() {});
     };
 
     // Find existing Things
     $scope.findOne = function() {
-      console.log('Chong Tang: In findOne()');
-      $scope.thing = Things.thing.get({
+      $scope.thing = ThingFactory.thing.get({
         thingId: $stateParams.thingId
       });
     };
