@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Proposition Schema
  */
 var PropositionSchema = new Schema({
+  project: {
+    type: Schema.ObjectId,
+    ref: 'Project'
+  },
   created: {
     type: Date,
     default: Date.now
@@ -24,15 +28,15 @@ var PropositionSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Thing'
   },
-  propcreator: { 
+  propcreator: {
     type: Schema.ObjectId,
     ref: 'Propcreator'
   },
-  evidences: { 
+  evidences: {
     type: Schema.ObjectId,
     ref: 'Evidence'
   },
-  judgements: { 
+  judgements: {
     type: Schema.ObjectId,
     ref: 'Judgements'
   },

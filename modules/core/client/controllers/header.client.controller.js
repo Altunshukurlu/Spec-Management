@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('core').controller('HeaderController', ['$scope', '$state',
-  'Authentication', 'Menus', 'CurProjectFactory',
-  function($scope, $state, Authentication, Menus, CurProjectFactory) {
+  'Authentication', 'Menus', 'ProjectFactory',
+  function($scope, $state, Authentication, Menus, ProjectFactory) {
     // Expose view variables
     $scope.$state = $state;
     $scope.authentication = Authentication;
@@ -22,7 +22,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$state',
     });
 
     $scope.projectIsSet = function() {
-      return CurProjectFactory.getProjId() !== '';
+      return ProjectFactory.getProjId() !== '';
     };
   }
 ]);

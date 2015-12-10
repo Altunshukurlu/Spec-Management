@@ -2,10 +2,8 @@
 
 // Projects controller
 angular.module('projects').controller('ProjectsController', ['$scope',
-  '$stateParams', '$location', 'Authentication', 'Projects',
-  'CurProjectFactory',
-  function($scope, $stateParams, $location, Authentication, Projects,
-    CurProjectFactory) {
+  '$stateParams', '$location', 'Authentication', 'ProjectFactory', 
+  function($scope, $stateParams, $location, Authentication, ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new project
@@ -19,7 +17,7 @@ angular.module('projects').controller('ProjectsController', ['$scope',
       }
 
       // Create new Projects object
-      var project = new Projects({
+      var project = new ProjectFactory.project({
         title: this.title,
         content: this.content
       });
@@ -48,8 +46,8 @@ angular.module('projects').controller('ProjectsController', ['$scope',
       } else {
         $scope.project.$remove(function() {
           // remove project information from service
-          CurProjectFactory.setCurProject({});
-          CurProjectFactory.setProjId('');
+          ProjectFactory.setCurProject({});
+          ProjectFactory.setProjId('');
           $location.path('projects');
         });
       }
@@ -76,17 +74,17 @@ angular.module('projects').controller('ProjectsController', ['$scope',
 
     // Find a list of Projects
     $scope.find = function() {
-      $scope.projects = Projects.query();
+      $scope.projects = ProjectFactory.project.query();
     };
 
     // Find existing Projects
     $scope.findOne = function() {
-      $scope.project = Projects.get({
+      $scope.project = ProjectFactory.project.get({
         projId: $stateParams.projId
       }, function() {
-        CurProjectFactory.setCurProject($scope.project);
+        ProjectFactory.setCurProject($scope.project);
         // set the project id for other modules
-        CurProjectFactory.setProjId($scope.project._id);
+        ProjectFactory.setProjId($scope.project._id);
       });
     };
   }

@@ -3,9 +3,9 @@
 // Judgements controller
 angular.module('judgements').controller('JudgementsController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'JudgementFactory',
-  'CurProjectFactory',
+  'ProjectFactory',
   function($scope, $stateParams, $location, Authentication,
-    JudgementFactory, CurProjectFactory) {
+    JudgementFactory, ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new judgement
@@ -22,7 +22,7 @@ angular.module('judgements').controller('JudgementsController', ['$scope',
       var judgement = new JudgementFactory.judgement({
         title: this.title,
         content: this.content,
-        project: CurProjectFactory.getProjId()
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
@@ -61,7 +61,7 @@ angular.module('judgements').controller('JudgementsController', ['$scope',
     // Find a list of Things
     $scope.find = function() {
       $scope.judgements = JudgementFactory.project.query({
-        project: CurProjectFactory.getProjId()
+        project: ProjectFactory.getProjId()
       });
     };
 

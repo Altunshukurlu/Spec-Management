@@ -3,11 +3,11 @@
 // Evidences controller
 angular.module('evidences').controller('EvidencesController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'EvidenceFactory',
-  'CurProjectFactory',
+  'ProjectFactory',
   function($scope, $stateParams, $location, Authentication, EvidenceFactory,
-    CurProjectFactory) {
+    ProjectFactory) {
     $scope.authentication = Authentication;
-    $scope.projectId = CurProjectFactory.getProjId();
+    $scope.projectId = ProjectFactory.getProjId();
 
     // Create new Evidence
     $scope.create = function(isValid) {
@@ -23,7 +23,7 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
       var evidence = new EvidenceFactory.evidence({
         title: this.title,
         content: this.content,
-        project: CurProjectFactory.getProjId()
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
@@ -77,7 +77,7 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
     // Find a list of Evidences
     $scope.find = function() {
       $scope.evidences = EvidenceFactory.project.query({
-        projectId: CurProjectFactory.getProjId()
+        projectId: ProjectFactory.getProjId()
       });
     };
 

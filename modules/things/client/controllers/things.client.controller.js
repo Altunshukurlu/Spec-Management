@@ -3,9 +3,9 @@
 // Things controller
 angular.module('things').controller('ThingsController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'ThingFactory',
-  'CurProjectFactory',
+  'ProjectFactory',
   function($scope, $stateParams, $location, Authentication, ThingFactory,
-    CurProjectFactory) {
+    ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new thing
@@ -22,7 +22,7 @@ angular.module('things').controller('ThingsController', ['$scope',
       var thing = new ThingFactory.thing({
         title: this.title,
         content: this.content,
-        project: CurProjectFactory.getProjId()
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
@@ -74,7 +74,7 @@ angular.module('things').controller('ThingsController', ['$scope',
     // Find a list of Things
     $scope.find = function() {
       $scope.things = ThingFactory.project.query({
-        projectId: CurProjectFactory.getProjId()
+        projectId: ProjectFactory.getProjId()
       }, function() {});
     };
 

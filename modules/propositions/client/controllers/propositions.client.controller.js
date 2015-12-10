@@ -2,14 +2,14 @@
 
 // Propositions controller
 angular.module('propositions').controller('PropositionsController', ['$scope',
-  '$stateParams', '$location', 'Authentication', 'CurProjectFactory',
+  '$stateParams', '$location', 'Authentication', 'ProjectFactory',
   'PropositionFactory', 'ThingFactory', 'PropcreatorFactory',
   'EvidenceFactory', 'JudgementFactory',
   function($scope, $stateParams, $location, Authentication,
-    CurProjectFactory, PropositionFactory, ThingFactory, PropcreatorFactory,
+    ProjectFactory, PropositionFactory, ThingFactory, PropcreatorFactory,
     EvidenceFactory, JudgementFactory) {
     $scope.authentication = Authentication;
-    $scope.projectId = CurProjectFactory.getProjId();
+    $scope.projectId = ProjectFactory.getProjId();
     $scope.things = ThingFactory.project.query({
       projectId: $scope.projectId
     });
@@ -41,6 +41,7 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       var proposition = new PropositionFactory.proposition({
         title: this.title,
         thing: this.selectedThing._id,
+        project: $scope.projectId,
         propcreator: this.selectedCreator._id,
         evidences: this.selectedEvidences._id,
         judgements: this.selectedThing._id /*Chong: Error*/

@@ -3,9 +3,9 @@
 // Propcreator controller
 angular.module('propcreators').controller('PropcreatorsController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'PropcreatorFactory',
-  'CurProjectFactory',
+  'ProjectFactory',
   function($scope, $stateParams, $location, Authentication,
-    PropcreatorFactory, CurProjectFactory) {
+    PropcreatorFactory, ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new proposition creator
@@ -21,7 +21,7 @@ angular.module('propcreators').controller('PropcreatorsController', ['$scope',
       // Create new Propcreator object
       var propCreator = new PropcreatorFactory.creator({
         title: this.title,
-        project: CurProjectFactory.getProjId()
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
@@ -74,7 +74,7 @@ angular.module('propcreators').controller('PropcreatorsController', ['$scope',
     // Find a list of Propcreators
     $scope.find = function() {
       $scope.propCreators = PropcreatorFactory.project.query({
-        projectId: CurProjectFactory.getProjId()
+        projectId: ProjectFactory.getProjId()
       });
     };
 
