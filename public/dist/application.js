@@ -113,7 +113,22 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('defeaters');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('evidences');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('evidencetypes');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('judgements');
 
 'use strict';
 
@@ -124,6 +139,11 @@ ApplicationConfiguration.registerModule('projects');
 
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('propcreators');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('propositions');
 
 'use strict';
 
@@ -212,8 +232,9 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
-  function ($scope, $state, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', '$state',
+  'Authentication', 'Menus', 'ProjectFactory',
+  function($scope, $state, Authentication, Menus, ProjectFactory) {
     // Expose view variables
     $scope.$state = $state;
     $scope.authentication = Authentication;
@@ -223,14 +244,18 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
     // Toggle the menu items
     $scope.isCollapsed = false;
-    $scope.toggleCollapsibleMenu = function () {
+    $scope.toggleCollapsibleMenu = function() {
       $scope.isCollapsed = !$scope.isCollapsed;
     };
 
     // Collapsing the menu after navigation
-    $scope.$on('$stateChangeSuccess', function () {
+    $scope.$on('$stateChangeSuccess', function() {
       $scope.isCollapsed = false;
     });
+
+    $scope.projectIsSet = function() {
+      return ProjectFactory.getProjId() !== '';
+    };
   }
 ]);
 
@@ -559,6 +584,163 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
 
 'use strict';
 
+// Configuring the Defeaters module
+angular.module('defeaters').run(['Menus',
+  function (Menus) {
+    // Add the articles dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Defeaters',
+      state: 'defeaters',
+      position: 3,
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    Menus.addSubMenuItem('topbar', 'defeaters', {
+      title: 'List Defeaters',
+      state: 'defeaters.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'defeaters', {
+      title: 'Create Defeaters',
+      state: 'defeaters.create'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('defeaters').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('defeaters', {
+        abstract: true,
+        url: '/defeaters',
+        template: '<ui-view/>'
+      })
+      .state('defeaters.list', {
+        url: '',
+        templateUrl: 'modules/defeaters/client/views/list-defeater.client.view.html'
+      })
+      .state('defeaters.create', {
+        url: '/create',
+        templateUrl: 'modules/defeaters/client/views/create-defeater.client.view.html'
+      })
+      .state('defeaters.view', {
+        url: '/:defeaterId',
+        templateUrl: 'modules/defeaters/client/views/view-defeater.client.view.html'
+      })
+      .state('defeaters.edit', {
+        url: '/:defeaterId/edit',
+        templateUrl: 'modules/defeaters/client/views/edit-defeater.client.view.html'
+      });
+  }
+]);
+
+
+'use strict';
+
+// Defeaters controller
+angular.module('defeaters').controller('DefeatersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Defeaters',
+  function ($scope, $stateParams, $location, Authentication, Defeaters) {
+    $scope.authentication = Authentication;
+
+    // Create new defeater
+    $scope.create = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'defeaterForm');
+
+        return false;
+      }
+
+      // Create new Defeaters object
+      var defeater = new Defeaters({
+        title: this.title,
+        content: this.content
+      });
+
+      // Redirect after save
+      defeater.$save(function (response) {
+        $location.path('defeaters/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.content = '';
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing defeater
+    $scope.remove = function (defeater) {
+      if (defeater) {
+        defeater.$remove();
+        for (var i in $scope.defeater) {
+          if ($scope.defeaters[i] === defeater) {
+            $scope.defeaters.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.defeater.$remove(function () {
+          $location.path('defeaters');
+        });
+      }
+    };
+
+    // Update existing Defeater
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'defeaterForm');
+
+        return false;
+      }
+
+      var defeater = $scope.defeater;
+
+      defeater.$update(function () {
+        $location.path('defeaters/' + defeater._id);
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Defeaters
+    $scope.find = function () {
+      $scope.defeaters = Defeaters.query();
+    };
+
+    // Find existing Defeaters
+    $scope.findOne = function () {
+      $scope.defeater = Defeaters.get({
+        defeaterId: $stateParams.defeaterId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Defeaters service used for communicating with thearguments REST endpoints
+angular.module('defeaters').factory('Defeaters', ['$resource',
+  function ($resource) {
+    return $resource('api/defeaters/:defeaterId', {
+      defeaterId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
 // Configuring the Evidences module
 angular.module('evidences').run(['Menus',
   function (Menus) {
@@ -605,9 +787,9 @@ angular.module('evidences').config(['$stateProvider',
       .state('evidences.create', {
         url: '/create',
         templateUrl: 'modules/evidences/client/views/create-evidence.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        //data: {
+        //  roles: ['user', 'admin']
+        //}
       })
       .state('evidences.view', {
         url: '/:evidenceId',
@@ -616,9 +798,9 @@ angular.module('evidences').config(['$stateProvider',
       .state('evidences.edit', {
         url: '/:evidenceId/edit',
         templateUrl: 'modules/evidences/client/views/edit-evidence.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
+        //data: {
+        //  roles: ['user', 'admin']
+        //}
       });
   }
 ]);
@@ -626,12 +808,16 @@ angular.module('evidences').config(['$stateProvider',
 'use strict';
 
 // Evidences controller
-angular.module('evidences').controller('EvidencesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Evidences',
-  function ($scope, $stateParams, $location, Authentication, Evidences) {
+angular.module('evidences').controller('EvidencesController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'EvidenceFactory',
+  'ProjectFactory',
+  function($scope, $stateParams, $location, Authentication, EvidenceFactory,
+    ProjectFactory) {
     $scope.authentication = Authentication;
+    $scope.projectId = ProjectFactory.getProjId();
 
     // Create new Evidence
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -641,25 +827,26 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
       }
 
       // Create new Evidence object
-      var evidence = new Evidences({
+      var evidence = new EvidenceFactory.evidence({
         title: this.title,
-        content: this.content
+        content: this.content,
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
-      evidence.$save(function (response) {
+      evidence.$save(function(response) {
         $location.path('evidences/' + response._id);
 
         // Clear form fields
         $scope.title = '';
         $scope.content = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Remove existing Evidence
-    $scope.remove = function (evidence) {
+    $scope.remove = function(evidence) {
       if (evidence) {
         evidence.$remove();
 
@@ -669,14 +856,14 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
           }
         }
       } else {
-        $scope.evidence.$remove(function () {
+        $scope.evidence.$remove(function() {
           $location.path('evidences');
         });
       }
     };
 
     // Update existing Evidence
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -687,22 +874,26 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
 
       var evidence = $scope.evidence;
 
-      evidence.$update(function () {
+      evidence.$update(function() {
         $location.path('evidences/' + evidence._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Find a list of Evidences
-    $scope.find = function () {
-      $scope.evidences = Evidences.query();
+    $scope.find = function() {
+      $scope.evidences = EvidenceFactory.project.query({
+        projectId: ProjectFactory.getProjId()
+      });
     };
 
     // Find existing Evidence
-    $scope.findOne = function () {
-      $scope.evidence = Evidences.get({
+    $scope.findOne = function() {
+      $scope.evidence = EvidenceFactory.evidence.get({
         evidenceId: $stateParams.evidenceId
+      }, function() {
+        //console.log($scope.evidence.project);
       });
     };
   }
@@ -711,15 +902,316 @@ angular.module('evidences').controller('EvidencesController', ['$scope', '$state
 'use strict';
 
 //Evidences service used for communicating with the evidences REST endpoints
-angular.module('evidences').factory('Evidences', ['$resource',
-  function ($resource) {
-    return $resource('api/evidences/:evidenceId', {
-      evidenceId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
+angular.module('evidences').factory('EvidenceFactory', ['$resource',
+  function($resource) {
+    return {
+      evidence: $resource('api/evidences/:evidenceId', {
+        evidenceId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      }),
+      project: $resource('api/evidences/project/:projectId', {
+        projectId: '@_id'
+      })
+    };
+  }
+]);
+
+'use strict';
+
+// Configuring the Evidencetypes module
+angular.module('evidencetypes').run(['Menus',
+  function (Menus) {
+    // Add the articles dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Evidence Types',
+      state: 'evidencetypes',
+      position: 0,
+      type: 'dropdown',
+      roles: ['*']
     });
+
+    Menus.addSubMenuItem('topbar', 'evidencetypes', {
+      title: 'List Evidence Types',
+      state: 'evidencetypes.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'evidencetypes', {
+      title: 'Create Evidence Types',
+      state: 'evidencetypes.create'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('evidencetypes').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('evidencetypes', {
+        abstract: true,
+        url: '/evidencetypes',
+        template: '<ui-view/>'
+      })
+      .state('evidencetypes.list', {
+        url: '',
+        templateUrl: 'modules/evidencetypes/client/views/list-evidencetypes.client.view.html'
+      })
+      .state('evidencetypes.create', {
+        url: '/create',
+        templateUrl: 'modules/evidencetypes/client/views/create-evidencetype.client.view.html'
+      })
+      .state('evidencetypes.view', {
+        url: '/:evidencetypeId',
+        templateUrl: 'modules/evidencetypes/client/views/view-evidencetype.client.view.html'
+      })
+      .state('evidencetypes.edit', {
+        url: '/:evidencetypeId/edit',
+        templateUrl: 'modules/evidencetypes/client/views/edit-evidencetype.client.view.html'
+      });
+  }
+]);
+
+'use strict';
+
+// Evidencetypes controller
+angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'EvidencetypeFactory',
+  'ProjectFactory',
+  function($scope, $stateParams, $location, Authentication, EvidencetypeFactory,
+    ProjectFactory) {
+    $scope.authentication = Authentication;
+
+    // Create new evidencetype
+    $scope.create = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'evidencetypeForm');
+
+        return false;
+      }
+
+      // Create new Evidencetypes object
+      var evidencetype = new EvidencetypeFactory.evidencetype({
+        title: this.title,
+        content: this.content,
+        project: ProjectFactory.getProjId()
+      });
+
+      // Redirect after save
+      evidencetype.$save(function(response) {
+        $location.path('evidencetypes/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.content = '';
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing evidencetype
+    $scope.remove = function(evidencetype) {
+      if (evidencetype) {
+        evidencetype.$remove();
+        for (var i in $scope.evidencetype) {
+          if ($scope.evidencetypes[i] === evidencetype) {
+            $scope.evidencetypes.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.evidencetype.$remove(function() {
+          $location.path('evidencetypes');
+        });
+      }
+    };
+
+    // Update existing Evidencetype
+    $scope.update = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'evidencetypeForm');
+        return false;
+      }
+
+      var evidencetype = $scope.evidencetype;
+
+      evidencetype.$update(function() {
+        $location.path('evidencetypes/' + evidencetype._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Evidencetypes
+    $scope.find = function() {
+      $scope.evidencetypes = EvidencetypeFactory.project.query({
+        projectId: ProjectFactory.getProjId()
+      }, function() {});
+    };
+
+    // Find existing Evidencetypes
+    $scope.findOne = function() {
+      $scope.evidencetype = EvidencetypeFactory.evidencetype.get({
+        evidencetypeId: $stateParams.evidencetypeId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Evidencetypes service used for communicating with the evidencetypes REST endpoints
+angular.module('evidencetypes').factory('EvidencetypeFactory', ['$resource',
+  function($resource) {
+    return {
+      evidencetype: $resource('api/evidencetypes/:evidencetypeId', {
+        evidencetypeId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      }),
+      project: $resource('api/evidencetypes/project/:projectId', {
+        projectID: '@_id'
+      })
+    };
+  }
+]);
+
+
+
+
+'use strict';
+
+// Setting up route
+angular.module('judgements').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('judgements', {
+        abstract: true,
+        url: '/judgements',
+        template: '<ui-view/>'
+      })
+      .state('judgements.list', {
+        url: '',
+        templateUrl: 'modules/judgements/client/views/list-judgement.client.view.html'
+      })
+      .state('judgements.create', {
+        url: '/create',
+        templateUrl: 'modules/judgements/client/views/create-judgement.client.view.html'
+      })
+      .state('judgements.view', {
+        url: '/:judgementId',
+        templateUrl: 'modules/judgements/client/views/view-judgement.client.view.html'
+      })
+      .state('judgements.edit', {
+        url: '/:judgementId/edit',
+        templateUrl: 'modules/judgements/client/views/edit-judgement.client.view.html'
+      });
+      
+  }
+]);
+
+'use strict';
+
+// Judgements controller
+angular.module('judgements').controller('JudgementsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'JudgementFactory',
+  'ProjectFactory',
+  function($scope, $stateParams, $location, Authentication,
+    JudgementFactory, ProjectFactory) {
+    $scope.authentication = Authentication;
+
+    // Create new judgement
+    $scope.create = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'judgementForm');
+
+        return false;
+      }
+
+      // Create new Judgements object
+      var judgement = new JudgementFactory.judgement({
+        title: this.title,
+        content: this.content,
+        project: ProjectFactory.getProjId()
+      });
+
+      // Redirect after save
+      judgement.$save(function(response) {
+        $location.path('judgements/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.content = '';
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+
+
+    // Update existing Judgement
+    $scope.update = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'judgementForm');
+
+        return false;
+      }
+
+      var judgement = $scope.judgement;
+
+      judgement.$update(function() {
+        $location.path('things/' + judgement._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Things
+    $scope.find = function() {
+      $scope.judgements = JudgementFactory.project.query({
+        project: ProjectFactory.getProjId()
+      });
+    };
+
+    // Find existing Judgements
+    $scope.findOne = function() {
+      $scope.judgement = JudgementFactory.judgement.get({
+        judgementId: $stateParams.judgementId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Judgements service used for communicating with the things REST endpoints
+angular.module('judgements').factory('JudgementFactory', ['$resource',
+  function($resource) {
+    return {
+      judgement: $resource('api/judgements/:judgementId', {
+        judgementId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      }),
+      project: $resource('api/judgements/project/:projectId', {
+        projectId: '@_id'
+      })
+    };
   }
 ]);
 
@@ -780,16 +1272,16 @@ angular.module('projects').config(['$stateProvider',
   }
 ]);
 
-
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects',
-  function ($scope, $stateParams, $location, Authentication, Projects) {
+angular.module('projects').controller('ProjectsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'ProjectFactory', 
+  function($scope, $stateParams, $location, Authentication, ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new project
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -799,25 +1291,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       }
 
       // Create new Projects object
-      var project = new Projects({
+      var project = new ProjectFactory.project({
         title: this.title,
         content: this.content
       });
 
       // Redirect after save
-      project.$save(function (response) {
+      project.$save(function(response) {
         $location.path('projects/' + response._id);
 
         // Clear form fields
         $scope.title = '';
         $scope.content = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Remove existing project
-    $scope.remove = function (project) {
+    $scope.remove = function(project) {
       if (project) {
         project.$remove();
         for (var i in $scope.project) {
@@ -826,14 +1318,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
           }
         }
       } else {
-        $scope.project.$remove(function () {
+        $scope.project.$remove(function() {
+          // remove project information from service
+          ProjectFactory.setCurProject({});
+          ProjectFactory.setProjId('');
           $location.path('projects');
         });
       }
     };
 
     // Update existing Project
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -844,22 +1339,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       var project = $scope.project;
 
-      project.$update(function () {
+      project.$update(function() {
         $location.path('projects/' + project._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
     // Find a list of Projects
-    $scope.find = function () {
-      $scope.projects = Projects.query();
+    $scope.find = function() {
+      $scope.projects = ProjectFactory.project.query();
     };
 
     // Find existing Projects
-    $scope.findOne = function () {
-      $scope.project = Projects.get({
+    $scope.findOne = function() {
+      $scope.project = ProjectFactory.project.get({
         projId: $stateParams.projId
+      }, function() {
+        ProjectFactory.setCurProject($scope.project);
+        // set the project id for other modules
+        ProjectFactory.setProjId($scope.project._id);
       });
     };
   }
@@ -868,15 +1367,35 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 'use strict';
 
 //Projects service used for communicating with the projects REST endpoints
-angular.module('projects').factory('Projects', ['$resource',
-  function ($resource) {
-    return $resource('api/projects/:projId', {
-      projId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
+angular.module('projects').factory('ProjectFactory', ['$resource',
+  function($resource) {
+    var curProject = {};
+    var projectId = '';
+    var setProjIdFunc = function(pId) {
+      projectId = pId;
+    };
+    var getProjIdFunc = function() {
+      return projectId;
+    };
+    var setCurProjectFunc = function(proj) {
+      curProject = proj;
+    };
+    var getCurProjectFunc = function() {
+      return curProject;
+    };
+    return {
+      setProjId: setProjIdFunc,
+      getProjId: getProjIdFunc,
+      setCurProject: setCurProjectFunc,
+      getCurProject: getCurProjectFunc,
+      project: $resource('api/projects/:projId', {
+        projId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      })
+    };
   }
 ]);
 
@@ -940,12 +1459,15 @@ angular.module('propcreators').config(['$stateProvider',
 'use strict';
 
 // Propcreator controller
-angular.module('propcreators').controller('PropcreatorsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Propcreators',
-  function ($scope, $stateParams, $location, Authentication, Propcreators) {
+angular.module('propcreators').controller('PropcreatorsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'PropcreatorFactory',
+  'ProjectFactory',
+  function($scope, $stateParams, $location, Authentication,
+    PropcreatorFactory, ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new proposition creator
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -955,40 +1477,41 @@ angular.module('propcreators').controller('PropcreatorsController', ['$scope', '
       }
 
       // Create new Propcreator object
-      var propCreator = new Propcreators({
-        title: this.title
+      var propCreator = new PropcreatorFactory.creator({
+        title: this.title,
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
-      propCreator.$save(function (response) {
+      propCreator.$save(function(response) {
         $location.path('propcreators/' + response._id);
 
         // Clear form fields
         $scope.title = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Remove existing Propcreator 
-    $scope.remove = function (propCreator) {
+    // Remove existing Propcreator
+    $scope.remove = function(propCreator) {
       if (propCreator) {
         propCreator.$remove();
         for (var i in $scope.propCreators) {
           if ($scope.propCreators[i] === propCreator) {
-            $scope.propCreators.splice(i, 1); 
+            $scope.propCreators.splice(i, 1);
           }
         }
       } else {
-        $scope.propCreator.$remove(function () {
+        $scope.propCreator.$remove(function() {
           $location.path('propcreators');
         });
-      }   
-    };  
+      }
+    };
 
 
     // Update existing Propcreator
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -999,21 +1522,23 @@ angular.module('propcreators').controller('PropcreatorsController', ['$scope', '
 
       var propCreator = $scope.propCreator;
 
-      propCreator.$update(function () {
+      propCreator.$update(function() {
         $location.path('propcreators/' + propCreator._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Find a list of Propcreators 
-    $scope.find = function () { 
-      $scope.propCreators = Propcreators.query();
+    // Find a list of Propcreators
+    $scope.find = function() {
+      $scope.propCreators = PropcreatorFactory.project.query({
+        projectId: ProjectFactory.getProjId()
+      });
     };
 
     // Find existing Propcreators
-    $scope.findOne = function () {
-      $scope.propCreator = Propcreators.get({
+    $scope.findOne = function() {
+      $scope.propCreator = PropcreatorFactory.creator.get({
         propCId: $stateParams.propCId
       });
     };
@@ -1023,15 +1548,214 @@ angular.module('propcreators').controller('PropcreatorsController', ['$scope', '
 'use strict';
 
 //Articles service used for communicating with the articles REST endpoints
-angular.module('propcreators').factory('Propcreators', ['$resource',
-  function ($resource) {
-    return $resource('api/propcreators/:propCId', {
-      propCId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
+angular.module('propcreators').factory('PropcreatorFactory', ['$resource',
+  function($resource) {
+    return {
+      creator: $resource('api/propcreators/:propCId', {
+        propCId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      }),
+      project: $resource('api/propcreators/project/:projectId', {
+        projectId: '@_id'
+      })
+    };
+  }
+]);
+
+'use strict';
+
+// Configuring the Propositions module
+angular.module('propositions').run(['Menus',
+  function (Menus) {
+    // Add the articles dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Propositions',
+      state: 'propositions',
+      position: 0,
+      type: 'dropdown',
+      roles: ['*']
     });
+
+    Menus.addSubMenuItem('topbar', 'propositions', {
+      title: 'List Propositions',
+      state: 'propositions.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'propositions', {
+      title: 'Create Propositions',
+      state: 'propositions.create'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('propositions').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('propositions', {
+        abstract: true,
+        url: '/propositions',
+        template: '<ui-view/>'
+      })
+      .state('propositions.list', {
+        url: '',
+        templateUrl: 'modules/propositions/client/views/list-proposition.client.view.html'
+      })
+      .state('propositions.create', {
+        url: '/create',
+        templateUrl: 'modules/propositions/client/views/create-proposition.client.view.html'
+      })
+      .state('propositions.view', {
+        url: '/:propositionId',
+        templateUrl: 'modules/propositions/client/views/view-proposition.client.view.html'
+      })
+      .state('propositions.edit', {
+        url: '/:propositionId/edit',
+        templateUrl: 'modules/propositions/client/views/edit-proposition.client.view.html'
+      });
+  }
+]);
+
+'use strict';
+
+// Propositions controller
+angular.module('propositions').controller('PropositionsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'ProjectFactory',
+  'PropositionFactory', 'ThingFactory', 'PropcreatorFactory',
+  'EvidenceFactory', 'JudgementFactory',
+  function($scope, $stateParams, $location, Authentication,
+    ProjectFactory, PropositionFactory, ThingFactory, PropcreatorFactory,
+    EvidenceFactory, JudgementFactory) {
+    $scope.authentication = Authentication;
+    $scope.projectId = ProjectFactory.getProjId();
+    $scope.things = ThingFactory.project.query({
+      projectId: $scope.projectId
+    });
+    $scope.creators = PropcreatorFactory.project.query({
+      projectId: $scope.projectId
+    });
+    $scope.judgements = JudgementFactory.project.query({
+      projectId: $scope.projectId
+    });
+    $scope.evidences = EvidenceFactory.project.query({
+      projectId: $scope.projectId
+    });
+
+
+    // Create new proposition
+    $scope.create = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propositionForm');
+        return false;
+      }
+
+      /* Chong: We don't have judgements stored in the database.
+       * So, we cannot choose one on the page.
+       * Instead, we give the thing id as judgement id here.
+       */
+      // Create new Propositions objectG
+      var proposition = new PropositionFactory.proposition({
+        title: this.title,
+        thing: this.selectedThing._id,
+        project: $scope.projectId,
+        propcreator: this.selectedCreator._id,
+        evidences: this.selectedEvidences._id,
+        judgements: this.selectedThing._id /*Chong: Error*/
+      });
+
+      // Redirect after save
+      proposition.$save(function(response) {
+        $location.path('propositions/' + response._id);
+        $scope.title = '';
+        //$scope.selectedThing = null;
+        //TODO: add other forms field
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing proposition
+    $scope.remove = function(proposition) {
+      if (proposition) {
+        proposition.$remove();
+        for (var i in $scope.proposition) {
+          if ($scope.propositions[i] === proposition) {
+            $scope.propositions.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.proposition.$remove(function() {
+          $location.path('propositions');
+        });
+      }
+    };
+
+    // Update existing proposition
+    $scope.update = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propositionForm');
+        return false;
+      }
+
+      var proposition = $scope.proposition;
+      proposition.thing = $scope.selectedThing._id;
+      proposition.propcreator = $scope.selectedCreator._id;
+      proposition.evidences = $scope.selectedEvidences._id;
+      proposition.judgements = $scope.selectedJudgements._id;
+      var foundThing = false;
+      proposition.$update(function() {
+        $location.path('propositions/' + proposition._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of propositions
+    $scope.find = function() {
+      $scope.propositions = PropositionFactory.project.query({
+        projectId: $scope.projectId
+      });
+    };
+
+    // Find existing Propositions
+    $scope.findOne = function() {
+      $scope.proposition = PropositionFactory.proposition.get({
+        propositionId: $stateParams.propositionId
+      }, function(resData) {
+        //$scope.selectedThing = resData.thing.title;
+        //$scope.selectedCreator = resData.propcreator.title;
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Propositions service used for communicating with the propositions REST endpoints
+angular.module('propositions').factory('PropositionFactory', ['$resource',
+  function($resource) {
+    return {
+      proposition: $resource('api/propositions/:propositionId', {
+        propositionId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      }),
+      project: $resource('api/propositions/project/:projectId', {
+        projectId: '@_id'
+      })
+    };
   }
 ]);
 
@@ -1092,16 +1816,18 @@ angular.module('things').config(['$stateProvider',
   }
 ]);
 
-
 'use strict';
 
 // Things controller
-angular.module('things').controller('ThingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Things',
-  function ($scope, $stateParams, $location, Authentication, Things) {
+angular.module('things').controller('ThingsController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'ThingFactory',
+  'ProjectFactory',
+  function($scope, $stateParams, $location, Authentication, ThingFactory,
+    ProjectFactory) {
     $scope.authentication = Authentication;
 
     // Create new thing
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -1111,25 +1837,26 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
       }
 
       // Create new Things object
-      var thing = new Things({
+      var thing = new ThingFactory.thing({
         title: this.title,
-        content: this.content
+        content: this.content,
+        project: ProjectFactory.getProjId()
       });
 
       // Redirect after save
-      thing.$save(function (response) {
+      thing.$save(function(response) {
         $location.path('things/' + response._id);
 
         // Clear form fields
         $scope.title = '';
         $scope.content = '';
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Remove existing thing 
-    $scope.remove = function (thing) {
+    // Remove existing thing
+    $scope.remove = function(thing) {
       if (thing) {
         thing.$remove();
         for (var i in $scope.thing) {
@@ -1138,39 +1865,40 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
           }
         }
       } else {
-        $scope.thing.$remove(function () {
+        $scope.thing.$remove(function() {
           $location.path('things');
         });
       }
     };
 
     // Update existing Thing
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'thingForm');
-
         return false;
       }
 
       var thing = $scope.thing;
 
-      thing.$update(function () {
+      thing.$update(function() {
         $location.path('things/' + thing._id);
-      }, function (errorResponse) {
+      }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
       });
     };
 
-    // Find a list of Things 
-    $scope.find = function () { 
-      $scope.things = Things.query();
+    // Find a list of Things
+    $scope.find = function() {
+      $scope.things = ThingFactory.project.query({
+        projectId: ProjectFactory.getProjId()
+      }, function() {});
     };
 
     // Find existing Things
-    $scope.findOne = function () {
-      $scope.thing = Things.get({
+    $scope.findOne = function() {
+      $scope.thing = ThingFactory.thing.get({
         thingId: $stateParams.thingId
       });
     };
@@ -1180,15 +1908,20 @@ angular.module('things').controller('ThingsController', ['$scope', '$stateParams
 'use strict';
 
 //Things service used for communicating with the things REST endpoints
-angular.module('things').factory('Things', ['$resource',
-  function ($resource) {
-    return $resource('api/things/:thingId', {
-      thingId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
+angular.module('things').factory('ThingFactory', ['$resource',
+  function($resource) {
+    return {
+      thing: $resource('api/things/:thingId', {
+        thingId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      }),
+      project: $resource('api/things/project/:projectId', {
+        projectID: '@_id'
+      })
+    };
   }
 ]);
 
@@ -1834,14 +2567,23 @@ angular.module('users').factory('Authentication', ['$window',
 angular.module('users').factory('PasswordValidator', ['$window',
   function ($window) {
     var owaspPasswordStrengthTest = $window.owaspPasswordStrengthTest;
+    owaspPasswordStrengthTest.config({
+      allowPassphrases       : true,
+      maxLength              : 128,
+      minLength              : 3,
+      minPhraseLength        : 0,
+      minOptionalTestsToPass : 0,
+    });
 
     return {
       getResult: function (password) {
         var result = owaspPasswordStrengthTest.test(password);
+        console.log('password test result:' + result);
         return result;
       },
       getPopoverMsg: function () {
-        var popoverMsg = 'Please enter a passphrase or password with greater than 10 characters, numbers, lowercase, upppercase, and special characters.';
+        //var popoverMsg = 'Please enter a passphrase or password with greater than 10 characters, numbers, lowercase, upppercase, and special characters.';
+        var popoverMsg = 'Please enter a password with greater than 3 characters.';
         return popoverMsg;
       }
     };
