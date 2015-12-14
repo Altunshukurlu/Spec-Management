@@ -24,7 +24,7 @@
 	      </div>
 
         <div class="form-group" show-errors>
-	        <label for="evidence">Creator: </label> {{proposition.evidences.title}}<br/>
+	        <label for="evidence">Evidence: </label> {{proposition.evidences.title}}<br/>
 	        <label for="evidence">Change to: </label>
 	        <select name="evidence" ng-model="selectedCreator" ng-options="evidence.title for evidence  in evidences" required> </select>
 	        <div ng-messages="propositionForm.creator.$error" role="alert">
@@ -32,7 +32,7 @@
           </div>
 	</div>
         <div class="form-group" show-errors>
-	        <label for="judgement">Creator: </label> {{proposition.judgements.title}}<br/>
+	        <label for="judgement">Judgement: </label> {{proposition.judgements.title}}<br/>
 	        <label for="judgement">Change to: </label>
 	        <select name="judgements" ng-model="selectedJudgements" ng-options="judgement.title for judgement in Judgements" required> </select>
 	        <div ng-messages="propositionForm.judgements.$error" role="alert">
