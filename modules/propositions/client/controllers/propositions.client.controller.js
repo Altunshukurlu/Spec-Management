@@ -40,11 +40,41 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       // Create new Propositions objectG
       var proposition = new PropositionFactory.proposition({
         title: this.title,
+        type: 'Basic',
         thing: this.selectedThing._id,
         project: $scope.projectId,
         propcreator: this.selectedCreator._id,
         evidences: this.selectedEvidences._id,
         judgements: this.selectedThing._id /*Chong: Error*/
+      });
+
+      // Redirect after save
+      proposition.$save(function(response) {
+        $location.path('propositions/' + response._id);
+        $scope.title = '';
+        //$scope.selectedThing = null;
+        //TODO: add other forms field
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Create new proposition
+    $scope.createComposite = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propositionForm');
+        return false;
+      }
+
+      // Create new Propositions objectG
+      var proposition = new PropositionFactory.proposition({
+        title: this.title,
+        firstProposition: this.selectedFirstProposition._id,
+        secondProposition: this.selectedSecondProposition._id,
+        type: 'Composite'
+          //TODO: add others
       });
 
       // Redirect after save
@@ -96,6 +126,28 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       });
     };
 
+    // Update existing composite proposition
+    $scope.updateComposite = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propositionForm');
+        return false;
+      }
+
+      var proposition = $scope.proposition;
+      proposition.firstProposition = $scope.selectedFirstProposition._id;
+      proposition.secondProposition = $scope.selectedSecondProposition._id;
+
+      proposition.$update(function() {
+        $location.path('propositions/composite-proposition/' +
+          proposition._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+
     // Find a list of propositions
     $scope.find = function() {
       $scope.propositions = PropositionFactory.project.query({
@@ -111,6 +163,15 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
         //$scope.selectedThing = resData.thing.title;
         //$scope.selectedCreator = resData.propcreator.title;
       });
+    };
+
+    $scope.viewPropositionByType = function(type) {
+      if (type === 'Composite') {
+        return
+          'propositions.view-composite({propositionId: proposition._id})';
+      } else {
+        return 'propositions.view({propositionId: proposition._id})';
+      }
     };
   }
 ]);

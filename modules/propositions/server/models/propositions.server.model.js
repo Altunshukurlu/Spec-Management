@@ -43,6 +43,19 @@ var PropositionSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  firstProposition: {
+    type: Schema.ObjectId,
+    ref: 'Proposition'
+  },
+  secondProposition: {
+    type: Schema.ObjectId,
+    ref: 'Proposition'
+  },
+  type: {
+    type: String,
+    default: 'Basic',
+    required: 'Type cannot be blank'
   }
 });
 

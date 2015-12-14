@@ -42,6 +42,8 @@ exports.update = function(req, res) {
 
   proposition.title = req.body.title;
   proposition.thing = req.body.thing;
+  proposition.firstProposition = req.body.firstProposition;
+  proposition.secondProposition = req.body.secondProposition;
   // proposition.thing = req.
   proposition.save(function(err) {
     if (err) {
@@ -80,6 +82,8 @@ exports.list = function(req, res) {
     .populate('propcreator', 'title')
     .populate('evidences', 'title')
     .populate('judgements', 'title')
+    .populate('firstProposition', 'title')
+    .populate('secondProposition', 'title')
     .exec(function(err, proposition) {
       if (err) {
         return res.status(400).send({
@@ -130,6 +134,8 @@ exports.propositionByID = function(req, res, next, id) {
     .populate('propcreator', 'title')
     .populate('evidences', 'title')
     .populate('judgements', 'title')
+    .populate('firstProposition', 'title')
+    .populate('secondProposition', 'title')
     .exec(function(err, proposition) {
       if (err) {
         return next(err);

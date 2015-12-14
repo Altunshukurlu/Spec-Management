@@ -1,0 +1,45 @@
+<section ng-controller="PropositionsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1>Edit Composite Proposition</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="propositionForm" class="form-horizontal" ng-submit="updateComposite(propositionForm.$valid)" novalidate>
+      <fieldset>
+
+	<div class="form-group" show-errors>
+	          <label for="firstProposition">First Proposition: </label> {{proposition.firstProposition.title}}<br/>
+	          <label for="firstProposition">Change to: </label>
+	          <select name="firstProposition" ng-model="selectedFirstProposition" ng-options="proposition.title for proposition in propositions" required> </select>
+	          <div ng-messages="propositionForm.propositions.$error" role="alert">
+      	       <p class="help-block error-text" ng-message="required">First Propositions is required.</p>
+            </div>
+        </div>
+
+	<div class="form-group" show-errors>
+	          <label for="secondProposition">Second Proposition: </label> {{proposition.secondProposition.title}}<br/>
+	          <label for="secondProposition">Change to: </label>
+	          <select name="secondProposition" ng-model="selectedSecondProposition" ng-options="proposition.title for proposition in propositions" required> </select>
+	          <div ng-messages="propositionForm.propositions.$error" role="alert">
+      	       <p class="help-block error-text" ng-message="required">Second Propositions is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="title">Notes: </label> {{proposition.title}} <br/>
+	        <label for="thing">Change to: </label>
+          <input name="title" type="text" ng-model="proposition.title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="propositionForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Proposition title is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Update" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+        <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

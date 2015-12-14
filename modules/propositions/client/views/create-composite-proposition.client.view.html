@@ -1,0 +1,41 @@
+<section ng-controller="PropositionsController" ng-init="find()">
+  <div class="page-header">
+    <h1>New Composite Proposition</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="propositionForm" class="form-horizontal" ng-submit="createComposite(propositionForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="propositions">First Proposition</label>
+          <select name="things" ng-model="selectedFirstProposition" ng-options="proposition.title for proposition in propositions" required> </select>
+          <div ng-messages="propositionForm.propositions.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Proposition is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="propositions">Second Proposition</label>
+          <select name="things" ng-model="selectedSecondProposition" ng-options="proposition.title for proposition in propositions" required> </select>
+          <div ng-messages="propositionForm.propositions.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Proposition is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="title">Note</label>
+          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="propositionForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Proposition title is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
