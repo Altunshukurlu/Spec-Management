@@ -167,8 +167,7 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
 
     $scope.viewPropositionByType = function(type) {
       if (type === 'Composite') {
-        return
-          'propositions.view-composite({propositionId: proposition._id})';
+        return 'propositions.view-composite({propositionId: proposition._id})';
       } else {
         return 'propositions.view({propositionId: proposition._id})';
       }
