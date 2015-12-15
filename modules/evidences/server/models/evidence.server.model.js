@@ -1,4 +1,3 @@
-
 'use strict';
 
 /**
@@ -33,6 +32,10 @@ var EvidenceSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  etype: {
+    type: Schema.ObjectId,
+    ref: 'Evidencetype'
   }
 });
 

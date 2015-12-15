@@ -53,10 +53,10 @@
       </li>
     </ul>
   </nav>
-  <div ng-if="projectIsSet() && authentication.user">
+  <div ng-if="authentication.user">
     <nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
       <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
-        <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user) && item.state != 'projects'" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" dropdown="item.type === 'dropdown'">
+        <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user) && ((projectIsSet() &&item.state != 'projects') || item.state == 'evidencetypes') " ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" dropdown="item.type === 'dropdown'">
           <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
           <ul ng-switch-when="dropdown" class="dropdown-menu">
             <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">

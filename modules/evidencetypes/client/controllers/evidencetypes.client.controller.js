@@ -3,9 +3,8 @@
 // Evidencetypes controller
 angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'EvidencetypeFactory',
-  'ProjectFactory',
-  function($scope, $stateParams, $location, Authentication, EvidencetypeFactory,
-    ProjectFactory) {
+  function($scope, $stateParams, $location, Authentication,
+    EvidencetypeFactory) {
     $scope.authentication = Authentication;
 
     // Create new evidencetype
@@ -13,7 +12,8 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'evidencetypeForm');
+        $scope.$broadcast('show-errors-check-validity',
+          'evidencetypeForm');
 
         return false;
       }
@@ -21,8 +21,7 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
       // Create new Evidencetypes object
       var evidencetype = new EvidencetypeFactory.evidencetype({
         title: this.title,
-        content: this.content,
-        project: ProjectFactory.getProjId()
+        content: this.content
       });
 
       // Redirect after save
@@ -58,7 +57,8 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'evidencetypeForm');
+        $scope.$broadcast('show-errors-check-validity',
+          'evidencetypeForm');
         return false;
       }
 
@@ -73,9 +73,7 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
 
     // Find a list of Evidencetypes
     $scope.find = function() {
-      $scope.evidencetypes = EvidencetypeFactory.project.query({
-        projectId: ProjectFactory.getProjId()
-      }, function() {});
+      $scope.evidencetypes = EvidencetypeFactory.evidencetype.query();
     };
 
     // Find existing Evidencetypes

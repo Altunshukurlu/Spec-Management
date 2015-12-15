@@ -3,11 +3,12 @@
 // Evidences controller
 angular.module('evidences').controller('EvidencesController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'EvidenceFactory',
-  'ProjectFactory',
+  'ProjectFactory', 'EvidencetypeFactory',
   function($scope, $stateParams, $location, Authentication, EvidenceFactory,
-    ProjectFactory) {
+    ProjectFactory, EvidencetypeFactory) {
     $scope.authentication = Authentication;
     $scope.projectId = ProjectFactory.getProjId();
+    $scope.types = EvidencetypeFactory.evidencetype.query();
 
     // Create new Evidence
     $scope.create = function(isValid) {
@@ -18,11 +19,11 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
 
         return false;
       }
-
       // Create new Evidence object
       var evidence = new EvidenceFactory.evidence({
         title: this.title,
         content: this.content,
+        etype: this.selectedType._id,
         project: ProjectFactory.getProjId()
       });
 
@@ -61,11 +62,17 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'evidenceForm');
-
         return false;
       }
 
       var evidence = $scope.evidence;
+      var typeId = '';
+      if (this.selectedType) {
+        typeId = this.selectedType._id;
+      } else {
+        typeId = this.evidence.etype._id;
+      }
+      evidence.etype = typeId;
 
       evidence.$update(function() {
         $location.path('evidences/' + evidence._id);

@@ -117,16 +117,19 @@ exports.evidenceByID = function(req, res, next, id) {
     });
   }
 
-  Evidence.findById(id).populate('user', 'displayName').exec(function(err,
-    evidence) {
-    if (err) {
-      return next(err);
-    } else if (!evidence) {
-      return res.status(404).send({
-        message: 'No evidence with that identifier has been found'
-      });
-    }
-    req.evidence = evidence;
-    next();
-  });
+  Evidence.findById(id)
+    .populate('user', 'displayName')
+    .populate('etype', 'title')
+    .exec(function(err,
+      evidence) {
+      if (err) {
+        return next(err);
+      } else if (!evidence) {
+        return res.status(404).send({
+          message: 'No evidence with that identifier has been found'
+        });
+      }
+      req.evidence = evidence;
+      next();
+    });
 };

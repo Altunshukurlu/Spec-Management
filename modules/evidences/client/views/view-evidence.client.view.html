@@ -1,6 +1,7 @@
 <section ng-controller="EvidencesController" ng-init="findOne()">
   <div class="page-header">
-    <h1 ng-bind="evidence.title"></h1>
+    <h3>Evidence Type: {{evidence.etype.title}}</h3>
+    <h3>Title: {{evidence.title}}</h3>
   </div>
   <div class="pull-right" ng-show="authentication.user._id == evidence.user._id">
     <a class="btn btn-primary" ui-sref="evidences.edit({evidenceId: evidence._id})">

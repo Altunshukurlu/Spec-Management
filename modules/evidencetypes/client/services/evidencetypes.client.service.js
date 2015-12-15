@@ -10,9 +10,6 @@ angular.module('evidencetypes').factory('EvidencetypeFactory', ['$resource',
         update: {
           method: 'PUT'
         }
-      }),
-      project: $resource('api/evidencetypes/project/:projectId', {
-        projectID: '@_id'
       })
     };
   }
