@@ -6,6 +6,7 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
   function($scope, $stateParams, $location, Authentication,
     EvidencetypeFactory) {
     $scope.authentication = Authentication;
+    $scope.types = EvidencetypeFactory.evidencetype.query();
 
     // Create new evidencetype
     $scope.create = function(isValid) {

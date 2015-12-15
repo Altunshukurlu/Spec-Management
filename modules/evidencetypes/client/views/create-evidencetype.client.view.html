@@ -6,27 +6,20 @@
     <form name="evidencetypeForm" class="form-horizontal" ng-submit="create(evidencetypeForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
-          <label for="title">Type</label>
+          <label for="title">Type Title</label>
           <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" >
           <div ng-messages="evidencetypeForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Evidence Type title is required.</p>
+          </div>
+        </div>
 
-        <label for="title"> Select Evidence Type: </label><br>
-    <select name="title" ng-model="title">
-        <option value="Software/system test results">Software/system test results</option>
-        <option value="Citations to external documents">Citations to external documents</option>
-        <option value="Experience reports by qualified stakeholders">Experience reports by qualified stakeholders</option>
-        <option value="From system operation">From system operation</option>
-        <option value="Formal proofs">Formal proofs</option>
-        <option value="Certification of compliance">Certification of compliance</option>
-        <option value="Correctness of code with respect to given specifications">Correctness of code with respect to given specifications</option>
-        <option value="Software and system inspections">Software and system inspections</option>
-        <option value="Static analysis">Static analysis</option>
-        <option value="Simulation results">Simulation results</option>
-        <option value="Prototype results">Prototype results</option>
-        <option value="Customer/user survey results (user testing)">Customer/user survey results (user testing)</option>
-        <option value="Statistical analysis of data">Statistical analysis of data</option>
-    </select><br><br>
+        <div class="form-group">
+          <label for="eType">Existing Evidence Type</label>
+          <select name="eType" ng-model="selectedType" ng-options="type.title for type in types" required> </select>
+           <div ng-messages="evidenceForm.eType.$error" role="alert">
+             <p class="help-block error-text" ng-message="required">Evidence type is required.</p>
+           </div>
+        </div>
 
         <div class="form-group">
           <label for="content">Content</label>
