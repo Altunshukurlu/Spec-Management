@@ -6,23 +6,24 @@
     <h2 ng-bind="proposition.judgements.title"></h2>
     <p ng-bind="proposition.title"></p>
   </div>
-  <div class="pull-right" ng-show="authentication.user._id == proposition.user._id">
+  <div class="pull-right">
     <a class="btn btn-primary" ui-sref="propositions.edit({propositionId: proposition._id})">
       <i class="glyphicon glyphicon-edit"></i>
-    </a>
+    </a><br><br>
     <a class="btn btn-primary" ng-click="remove();">
       <i class="glyphicon glyphicon-trash"></i>
     </a>
   </div>
-  <small>
-
+ <br><br><br><br><br><br>
+    <div class="pull-right">
     <a class="btn btn-primary" ui-sref="judgements.create({judgementId: judgements._id})">Add Judgement
-      <i class="glyphicon glyphicon-edit"></i>
     </a>
-
-     <a class="btn btn-primary" ui-sref="evidences.create({evidenceId: evidence._id})">Add Judgement
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
+    </div>
+<br><br><br>
+    <div class="pull-right">
+     <a class="btn btn-primary" ui-sref="evidences.create({evidenceId: evidence._id})">Add Evidence
+     </a>
+    </div>
     
     <em class="text-muted">
       Posted on
