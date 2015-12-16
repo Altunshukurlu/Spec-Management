@@ -162,12 +162,14 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
 
     // Find existing Propositions
     $scope.findOne = function() {
-      console.log($scope.propositions);
       $scope.proposition = PropositionFactory.proposition.get({
         propositionId: $stateParams.propositionId
-      }, function(resData) {
-        //$scope.selectedThing = resData.thing.title;
-        //$scope.selectedCreator = resData.propcreator.title;
+      }, function(errorResponse) {
+        if ($scope.proposition.type === 'Composite') {
+          $scope.propositions = PropositionFactory.project.query({
+            projectId: $scope.projectId
+          });
+        }
       });
     };
 
