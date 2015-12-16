@@ -38,13 +38,13 @@ exports.read = function(req, res) {
  * Update a proposition
  */
 exports.update = function(req, res) {
-  var proposition = req.proposition(req.body);
+  var proposition = req.proposition;
   proposition.title = req.body.title;
   proposition.thing = req.body.thing;
   proposition.firstProposition = req.body.firstProposition;
   proposition.secondProposition = req.body.secondProposition;
   proposition.evidences = req.body.evidences;
-  proposition.judgements= req.body.judgements;
+  proposition.judgements = req.body.judgements;
   // proposition.thing = req.
   proposition.save(function(err) {
     if (err) {

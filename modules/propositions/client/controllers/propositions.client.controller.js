@@ -123,7 +123,7 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       if (typeof(this.selectedJudgement._id) !== 'undefined') {
         proposition.judgements = this.selectedJudgement._id;
       }
-      console.log(proposition.evidences);
+
       var foundThing = false;
       proposition.$update(function() {
         $location.path('propositions/' + proposition._id);
