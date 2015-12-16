@@ -3,7 +3,7 @@
     <h1>Propositions</h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="proposition in propositions track by $index" ui-sref="propositions.view({propositionId: proposition._id})" class="list-group-item">
+    <a ng-href='' ng-repeat="proposition in propositions track by $index" ng-click="viewPropositionByType(proposition)" class="list-group-item">
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="proposition.created | date:'mediumDate'"></span>

@@ -38,12 +38,13 @@ exports.read = function(req, res) {
  * Update a proposition
  */
 exports.update = function(req, res) {
-  var proposition = req.proposition;
-
+  var proposition = req.proposition(req.body);
   proposition.title = req.body.title;
   proposition.thing = req.body.thing;
   proposition.firstProposition = req.body.firstProposition;
   proposition.secondProposition = req.body.secondProposition;
+  proposition.evidences = req.body.evidences;
+  proposition.judgements= req.body.judgements;
   // proposition.thing = req.
   proposition.save(function(err) {
     if (err) {
@@ -106,6 +107,8 @@ exports.propositionsByProjectID = function(req, res, next, projectId) {
     .populate('propcreator', 'title')
     .populate('evidences', 'title')
     .populate('judgements', 'title')
+    .populate('firstProposition', 'title')
+    .populate('secondProposition', 'title')
     .exec(function(err, proposition) {
       if (err) {
         return res.status(400).send({

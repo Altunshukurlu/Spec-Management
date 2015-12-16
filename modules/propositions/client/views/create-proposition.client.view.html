@@ -5,48 +5,45 @@
   <div class="col-md-12">
     <form name="propositionForm" class="form-horizontal" ng-submit="create(propositionForm.$valid)" novalidate>
       <fieldset>
+        <div class="form-group" show-errors>
+          <label for="things">Things</label>
+          <select name="things" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
+          <div ng-messages="propositionForm.things.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Thing is required.</p>
+          </div>
+        </div>
 
+        <div class="form-group" show-errors>
+          <label for="creators">Creators</label>
+          <select name="creators" ng-model="selectedCreator" ng-options="creator.title for creator in creators" required> </select>
+          <div ng-messages="propositionForm.creators.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Creator is required.</p>
+          </div>
+        </div>
 
-	<div class="form-group" show-errors>
-		<label for="things">Things</label>
-		  <select name="things" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
-		   <div ng-messages="propositionForm.things.$error" role="alert">
-         <p class="help-block error-text" ng-message="required">Thing is required.</p>
-       </div>
-	</div>
+        <div class="form-group" show-errors>
+          <label for="evidences">Evidence (optional)</label>
+          <select name="evidences" ng-model="selectedEvidence" ng-options="evidence.title for evidence in evidences"> </select>
+          <div ng-messages="propositionForm.evidences.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Evidence is required.</p>
+          </div>
+        </div>
 
-  <div class="form-group" show-errors>
-		<label for="creators">Creators</label>
-		<select name="creators" ng-model="selectedCreator" ng-options="creator.title for creator in creators" required> </select>
-		<div ng-messages="propositionForm.creators.$error" role="alert">
-      <p class="help-block error-text" ng-message="required">Creator is required.</p>
-    </div>
-	</div>
+        <div class="form-group" show-errors>
+          <label for="judgements">Judgements (optional)</label>
+          <select name="judgements" ng-model="selectedJudgement" ng-options="judgement.title for judgement in judgements"> </select>
+          <div ng-messages="propositionForm.judgements.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Judgement is required.</p>
+          </div>
+        </div>
 
-  <div class="form-group" show-errors>
-		<label for="evidences">Evidence</label>
-		  <select name="evidences" ng-model="selectedEvidences" ng-options="evidence.title for evidence in evidences" required> </select>
-		   <div ng-messages="propositionForm.evidences.$error" role="alert">
-         <p class="help-block error-text" ng-message="required">Evidence is required.</p>
-       </div>
-	</div>
-
-
-  <div class="form-group" show-errors>
-		<label for="judgements">Judgements</label>
-		  <select name="judgements" ng-model="selectedJudgements" ng-options="judgement.title for judgement in judgements"> </select>
-		   <div ng-messages="propositionForm.judgements.$error" role="alert">
-         <p class="help-block error-text" ng-message="required">Judgement is required.</p>
-       </div>
-	</div>
-
-      <div class="form-group" show-errors>
+        <div class="form-group" show-errors>
           <label for="title">Note</label>
           <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
           <div ng-messages="propositionForm.title.$error" role="alert">
-	        <p class="help-block error-text" ng-message="required">Proposition title is required.</p>
-  	  </div>
-  </div>
+            <p class="help-block error-text" ng-message="required">Proposition title is required.</p>
+          </div>
+        </div>
 
         <div class="form-group">
           <input type="submit" class="btn btn-default">

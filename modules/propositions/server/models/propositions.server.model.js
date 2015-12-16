@@ -12,7 +12,8 @@ var mongoose = require('mongoose'),
 var PropositionSchema = new Schema({
   project: {
     type: Schema.ObjectId,
-    ref: 'Project'
+    ref: 'Project',
+    required: 'Project cannot be blank'
   },
   created: {
     type: Date,
@@ -34,11 +35,13 @@ var PropositionSchema = new Schema({
   },
   evidences: {
     type: Schema.ObjectId,
-    ref: 'Evidence'
+    ref: 'Evidence',
+    required: false
   },
   judgements: {
     type: Schema.ObjectId,
-    ref: 'Judgements'
+    ref: 'Judgements',
+    required: false
   },
   user: {
     type: Schema.ObjectId,
@@ -46,11 +49,13 @@ var PropositionSchema = new Schema({
   },
   firstProposition: {
     type: Schema.ObjectId,
-    ref: 'Proposition'
+    ref: 'Proposition',
+    required: false
   },
   secondProposition: {
     type: Schema.ObjectId,
-    ref: 'Proposition'
+    ref: 'Proposition',
+    required: false
   },
   type: {
     type: String,

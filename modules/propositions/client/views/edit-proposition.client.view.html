@@ -5,44 +5,49 @@
   <div class="col-md-12">
     <form name="propositionForm" class="form-horizontal" ng-submit="update(propositionForm.$valid)" novalidate>
       <fieldset>
-	       <div class="form-group" show-errors>
-	          <label for="thing">Things: </label> {{proposition.thing.title}}<br/>
-	          <label for="thing">Change to: </label>
-	          <select name="thing" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
-	          <div ng-messages="propositionForm.things.$error" role="alert">
-      	       <p class="help-block error-text" ng-message="required">Thing is required.</p>
-            </div>
+        <div class="form-group" show-errors>
+          <label for="thing">Things: </label> {{proposition.thing.title}}
+          <br/>
+          <label for="thing">Change to: </label>
+          <select name="thing" ng-model="selectedThing" ng-options="thing.title for thing in things" required> </select>
+          <div ng-messages="propositionForm.things.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Thing is required.</p>
+          </div>
         </div>
 
-	      <div class="form-group" show-errors>
-	        <label for="creator">Creator: </label> {{proposition.propcreator.title}}<br/>
-	        <label for="creator">Change to: </label>
-	        <select name="creator" ng-model="selectedCreator" ng-options="creator.title for creator in creators" required> </select>
-	        <div ng-messages="propositionForm.creator.$error" role="alert">
-      	    <p class="help-block error-text" ng-message="required">Creator is required.</p>
+        <div class="form-group" show-errors>
+          <label for="creator">Creator: </label> {{proposition.propcreator.title}}
+          <br/>
+          <label for="creator">Change to: </label>
+          <select name="creator" ng-model="selectedCreator" ng-options="creator.title for creator in creators" required> </select>
+          <div ng-messages="propositionForm.creator.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Creator is required.</p>
           </div>
-	      </div>
+        </div>
 
         <div class="form-group" show-errors>
-	        <label for="evidence">Evidence: </label> {{proposition.evidences.title}}<br/>
-	        <label for="evidence">Change to: </label>
-	        <select name="evidence" ng-model="selectedEvidence" ng-options="evidence.title for evidence  in evidences" required> </select>
-	        <div ng-messages="propositionForm.creator.$error" role="alert">
-      	    <p class="help-block error-text" ng-message="required">Evidence is required.</p>
+          <label for="evidence">Evidence: </label> {{proposition.evidences.title}}
+          <br/>
+          <label for="evidence">Change to: </label>
+          <select name="evidence" ng-model="selectedEvidence" ng-options="evidence.title for evidence  in evidences"> </select>
+          <div ng-messages="propositionForm.evidence.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Evidence is required.</p>
           </div>
-	</div>
+        </div>
         <div class="form-group" show-errors>
-	        <label for="judgement">Judgement: </label> {{proposition.judgements.title}}<br/>
-	        <label for="judgement">Change to: </label>
-	        <select name="judgements" ng-model="selectedJudgements" ng-options="judgement.title for judgement in judgements" > </select>
-	        <div ng-messages="propositionForm.judgements.$error" role="alert">
-      	    <p class="help-block error-text" ng-message="required">Judgement is required.</p>
+          <label for="judgement">Judgement: </label> {{proposition.judgements.title}}
+          <br/>
+          <label for="judgement">Change to: </label>
+          <select name="judgement" ng-model="selectedJudgement" ng-options="judgement.title for judgement in judgements"> </select>
+          <div ng-messages="propositionForm.judgement.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Judgement is required.</p>
           </div>
-	      </div>
-        
+        </div>
+
         <div class="form-group" show-errors>
-          <label for="title">Notes: </label> {{proposition.title}} <br/>
-	        <label for="thing">Change to: </label>
+          <label for="title">Notes: </label> {{proposition.title}}
+          <br/>
+          <label for="thing">Change to: </label>
           <input name="title" type="text" ng-model="proposition.title" id="title" class="form-control" placeholder="Title" required>
           <div ng-messages="propositionForm.title.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Proposition title is required.</p>
@@ -53,7 +58,7 @@
           <input type="submit" value="Update" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
-        <strong ng-bind="error"></strong>
+          <strong ng-bind="error"></strong>
         </div>
       </fieldset>
     </form>

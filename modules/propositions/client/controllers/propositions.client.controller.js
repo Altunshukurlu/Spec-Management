@@ -2,10 +2,10 @@
 
 // Propositions controller
 angular.module('propositions').controller('PropositionsController', ['$scope',
-  '$stateParams', '$location', 'Authentication', 'ProjectFactory',
+  '$state', '$stateParams', '$location', 'Authentication', 'ProjectFactory',
   'PropositionFactory', 'ThingFactory', 'PropcreatorFactory',
   'EvidenceFactory', 'JudgementFactory',
-  function($scope, $stateParams, $location, Authentication,
+  function($scope, $state, $stateParams, $location, Authentication,
     ProjectFactory, PropositionFactory, ThingFactory, PropcreatorFactory,
     EvidenceFactory, JudgementFactory) {
     $scope.authentication = Authentication;
@@ -33,21 +33,20 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
         return false;
       }
 
-      /* Chong: We don't have judgements stored in the database.
-       * So, we cannot choose one on the page.
-       * Instead, we give the thing id as judgement id here.
-       */
-      // Create new Propositions objectG
+      // Create new Propositions object
       var proposition = new PropositionFactory.proposition({
         title: this.title,
         type: 'Basic',
         thing: this.selectedThing._id,
         project: $scope.projectId,
-        propcreator: this.selectedCreator._id,
-        evidences: this.selectedEvidences._id,
-        judgements: this.selectedThing._id /*Chong: Error*/
+        propcreator: this.selectedCreator._id
       });
-
+      if (this.selectedEvidence) {
+        proposition.evidences = this.selectedEvidence._id;
+      }
+      if (this.selectedJudgement) {
+        proposition.judgements = this.selectedJudgement._id;
+      }
       // Redirect after save
       proposition.$save(function(response) {
         $location.path('propositions/' + response._id);
@@ -71,11 +70,13 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       // Create new Propositions objectG
       var proposition = new PropositionFactory.proposition({
         title: this.title,
+        project: ProjectFactory.getProjId(),
         firstProposition: this.selectedFirstProposition._id,
         secondProposition: this.selectedSecondProposition._id,
         type: 'Composite'
           //TODO: add others
       });
+      console.log(proposition.title);
 
       // Redirect after save
       proposition.$save(function(response) {
@@ -116,8 +117,13 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       var proposition = $scope.proposition;
       proposition.thing = $scope.selectedThing._id;
       proposition.propcreator = $scope.selectedCreator._id;
-      proposition.evidences = $scope.selectedEvidences._id;
-      proposition.judgements = $scope.selectedJudgements._id;
+      if (typeof(this.selectedEvidence._id) !== 'undefined') {
+        proposition.evidences = this.selectedEvidence._id;
+      }
+      if (typeof(this.selectedJudgement._id) !== 'undefined') {
+        proposition.judgements = this.selectedJudgement._id;
+      }
+      console.log(proposition.evidences);
       var foundThing = false;
       proposition.$update(function() {
         $location.path('propositions/' + proposition._id);
@@ -138,7 +144,6 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       var proposition = $scope.proposition;
       proposition.firstProposition = $scope.selectedFirstProposition._id;
       proposition.secondProposition = $scope.selectedSecondProposition._id;
-
       proposition.$update(function() {
         $location.path('propositions/composite-proposition/' +
           proposition._id);
@@ -157,6 +162,7 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
 
     // Find existing Propositions
     $scope.findOne = function() {
+      console.log($scope.propositions);
       $scope.proposition = PropositionFactory.proposition.get({
         propositionId: $stateParams.propositionId
       }, function(resData) {
@@ -165,11 +171,16 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       });
     };
 
-    $scope.viewPropositionByType = function(type) {
-      if (type === 'Composite') {
-        return 'propositions.view-composite({propositionId: proposition._id})';
+    $scope.viewPropositionByType = function(proposition) {
+      var pId = proposition._id;
+      if (proposition.type === 'Composite') {
+        $state.go('propositions.view-composite', {
+          propositionId: pId
+        });
       } else {
-        return 'propositions.view({propositionId: proposition._id})';
+        $state.go('propositions.view', {
+          propositionId: pId
+        });
       }
     };
   }
