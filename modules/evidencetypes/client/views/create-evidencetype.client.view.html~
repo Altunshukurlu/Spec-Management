@@ -12,7 +12,7 @@
             <p class="help-block error-text" ng-message="required">Evidence Type title is required.</p>
           </div>
         </div>
-	<!--
+
         <div class="form-group">
           <label for="eType">Existing Evidence Type</label>
           <select name="eType" ng-model="selectedType" ng-options="type.title for type in types" required> </select>
@@ -20,7 +20,6 @@
              <p class="help-block error-text" ng-message="required">Evidence type is required.</p>
            </div>
         </div>
-	-->
 
         <div class="form-group">
           <label for="content">Content</label>

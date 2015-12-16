@@ -10,7 +10,7 @@
         by
         <span ng-bind="inferencerule.user.displayName"></span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="inferencerule.title"></h4>		
+      <h4 class="list-group-item-heading" ng-bind="inferencerule.title"></h4>
       <p class="list-group-item-text" ng-bind="inferencerule.content"></p>
     </a>
   </div>

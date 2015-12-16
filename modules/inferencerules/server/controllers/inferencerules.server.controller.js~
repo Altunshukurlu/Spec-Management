@@ -41,8 +41,6 @@ exports.update = function(req, res) {
   var inferencerule = req.inferencerule;
 
   inferencerule.title = req.body.title;
-  inferencerule.premise = req.body.premise;
-  inferencerule.conclusion = req.body.conclusion;
   inferencerule.content = req.body.content;
 
   inferencerule.save(function(err) {

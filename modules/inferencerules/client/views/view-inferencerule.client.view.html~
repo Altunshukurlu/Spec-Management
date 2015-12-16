@@ -18,8 +18,7 @@
       <span ng-bind="inferencerule.user.displayName"></span>
     </em>
   </small>
-  <p class="lead" > Premise: <span ng-bind="inferencerule.premise"></span></p>
-  <p class="lead" > Conclusion: <span ng-bind="inferencerule.conclusion"></span></p>
-  <p class="lead" > Note: <span ng-bind="inferencerule.content"></span></p>
-
+  <p class="lead" ng-bind="inferencerule.premise"></p>
+  <p class="lead" ng-bind="inferencerule.conclusion"></p>
+  <p class="lead" ng-bind="inferencerule.content"></p>
 </section>
