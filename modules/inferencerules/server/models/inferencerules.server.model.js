@@ -24,13 +24,13 @@ var InferenceruleSchema = new Schema({
     trim: true,
     required: 'Title cannot be blank'
   },
-premise: {
+  premise: {
     type: String,
     default: '',
     trim: true,
     required: 'Premise cannot be blank'
   },
-conclusion: {
+  conclusion: {
     type: String,
     default: '',
     trim: true,
