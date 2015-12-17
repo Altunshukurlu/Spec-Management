@@ -21,8 +21,8 @@ angular.module('inferencerules').controller('InferencerulesController', ['$scope
       // Create new Inferencerules object
       var inferencerule = new InferenceruleFactory.inferencerule({
         title: this.title,
-	premise: this.premise,
-	conclusion: this.conclusion,
+	    premise: this.premise,
+	    conclusion: this.conclusion,
         content: this.content,
         project: ProjectFactory.getProjId()
       });
@@ -33,8 +33,8 @@ angular.module('inferencerules').controller('InferencerulesController', ['$scope
 
         // Clear form fields
         $scope.title = '';
-	$scope.premise = '';
-	$scope.conclusion = '';
+	    $scope.premise = '';
+	    $scope.conclusion = '';
         $scope.content = '';
       }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
