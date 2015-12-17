@@ -34,7 +34,7 @@ angular.module('inferencerules').controller('InferencerulesController', ['$scope
         // Clear form fields
         $scope.title = '';
 	    $scope.premise = '';
-	   $scope.conclusion = '';
+	    $scope.conclusion = '';
         $scope.content = '';
       }, function(errorResponse) {
         $scope.error = errorResponse.data.message;
