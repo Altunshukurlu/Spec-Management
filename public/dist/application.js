@@ -128,6 +128,11 @@ ApplicationConfiguration.registerModule('evidencetypes');
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('inferencerules');
+
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('judgements');
 
 'use strict';
@@ -810,11 +815,12 @@ angular.module('evidences').config(['$stateProvider',
 // Evidences controller
 angular.module('evidences').controller('EvidencesController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'EvidenceFactory',
-  'ProjectFactory',
+  'ProjectFactory', 'EvidencetypeFactory',
   function($scope, $stateParams, $location, Authentication, EvidenceFactory,
-    ProjectFactory) {
+    ProjectFactory, EvidencetypeFactory) {
     $scope.authentication = Authentication;
     $scope.projectId = ProjectFactory.getProjId();
+    $scope.types = EvidencetypeFactory.evidencetype.query();
 
     // Create new Evidence
     $scope.create = function(isValid) {
@@ -825,11 +831,11 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
 
         return false;
       }
-
       // Create new Evidence object
       var evidence = new EvidenceFactory.evidence({
         title: this.title,
         content: this.content,
+        etype: this.selectedType._id,
         project: ProjectFactory.getProjId()
       });
 
@@ -868,11 +874,17 @@ angular.module('evidences').controller('EvidencesController', ['$scope',
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'evidenceForm');
-
         return false;
       }
 
       var evidence = $scope.evidence;
+      var typeId = '';
+      if (this.selectedType) {
+        typeId = this.selectedType._id;
+      } else {
+        typeId = this.evidence.etype._id;
+      }
+      evidence.etype = typeId;
 
       evidence.$update(function() {
         $location.path('evidences/' + evidence._id);
@@ -981,17 +993,18 @@ angular.module('evidencetypes').config(['$stateProvider',
 // Evidencetypes controller
 angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
   '$stateParams', '$location', 'Authentication', 'EvidencetypeFactory',
-  'ProjectFactory',
-  function($scope, $stateParams, $location, Authentication, EvidencetypeFactory,
-    ProjectFactory) {
+  function($scope, $stateParams, $location, Authentication,
+    EvidencetypeFactory) {
     $scope.authentication = Authentication;
+    $scope.types = EvidencetypeFactory.evidencetype.query();
 
     // Create new evidencetype
     $scope.create = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'evidencetypeForm');
+        $scope.$broadcast('show-errors-check-validity',
+          'evidencetypeForm');
 
         return false;
       }
@@ -999,8 +1012,7 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
       // Create new Evidencetypes object
       var evidencetype = new EvidencetypeFactory.evidencetype({
         title: this.title,
-        content: this.content,
-        project: ProjectFactory.getProjId()
+        content: this.content
       });
 
       // Redirect after save
@@ -1036,7 +1048,8 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
       $scope.error = null;
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'evidencetypeForm');
+        $scope.$broadcast('show-errors-check-validity',
+          'evidencetypeForm');
         return false;
       }
 
@@ -1051,9 +1064,7 @@ angular.module('evidencetypes').controller('EvidencetypesController', ['$scope',
 
     // Find a list of Evidencetypes
     $scope.find = function() {
-      $scope.evidencetypes = EvidencetypeFactory.project.query({
-        projectId: ProjectFactory.getProjId()
-      }, function() {});
+      $scope.evidencetypes = EvidencetypeFactory.evidencetype.query();
     };
 
     // Find existing Evidencetypes
@@ -1077,8 +1088,175 @@ angular.module('evidencetypes').factory('EvidencetypeFactory', ['$resource',
         update: {
           method: 'PUT'
         }
+      })
+    };
+  }
+]);
+
+'use strict';
+
+// Configuring the Inferencerules module
+angular.module('inferencerules').run(['Menus',
+  function (Menus) {
+    // Add the articles dropdown item
+    Menus.addMenuItem('topbar', {
+      title: 'Inference Rules',
+      state: 'inferencerules',
+      position: 0,
+      type: 'dropdown',
+      roles: ['*']
+    });
+
+    Menus.addSubMenuItem('topbar', 'inferencerules', {
+      title: 'List Inference Rules',
+      state: 'inferencerules.list'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'inferencerules', {
+      title: 'Create Inference Rule',
+      state: 'inferencerules.create'
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('inferencerules').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('inferencerules', {
+        abstract: true,
+        url: '/inferencerules',
+        template: '<ui-view/>'
+      })
+      .state('inferencerules.list', {
+        url: '',
+        templateUrl: 'modules/inferencerules/client/views/list-inferencerules.client.view.html'
+      })
+      .state('inferencerules.create', {
+        url: '/create',
+        templateUrl: 'modules/inferencerules/client/views/create-inferencerule.client.view.html'
+      })
+      .state('inferencerules.view', {
+        url: '/:inferenceruleId',
+        templateUrl: 'modules/inferencerules/client/views/view-inferencerule.client.view.html'
+      })
+      .state('inferencerules.edit', {
+        url: '/:inferenceruleId/edit',
+        templateUrl: 'modules/inferencerules/client/views/edit-inferencerule.client.view.html'
+      });
+  }
+]);
+
+'use strict';
+
+// Inferencerules controller
+angular.module('inferencerules').controller('InferencerulesController', ['$scope',
+  '$stateParams', '$location', 'Authentication', 'InferenceruleFactory',
+  'ProjectFactory',
+  function($scope, $stateParams, $location, Authentication, InferenceruleFactory,
+    ProjectFactory) {
+    $scope.authentication = Authentication;
+
+    // Create new inferencerule
+    $scope.create = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'inferenceruleForm');
+
+        return false;
+      }
+
+      // Create new Inferencerules object
+      var inferencerule = new InferenceruleFactory.inferencerule({
+        title: this.title,
+        premise: this.premise,
+        conclusion: this.conclusion,
+        content: this.content,
+        project: ProjectFactory.getProjId()
+      });
+
+      // Redirect after save
+      inferencerule.$save(function(response) {
+        $location.path('inferencerules/' + response._id);
+
+        // Clear form fields
+        $scope.title = '';
+        $scope.premise = '';
+        $scope.conclusion = '';
+        $scope.content = '';
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing inferencerule
+    $scope.remove = function(inferencerule) {
+      if (inferencerule) {
+        inferencerule.$remove();
+        for (var i in $scope.inferencerule) {
+          if ($scope.inferencerules[i] === inferencerule) {
+            $scope.inferencerules.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.inferencerule.$remove(function() {
+          $location.path('inferencerules');
+        });
+      }
+    };
+
+    // Update existing Inferencerule
+    $scope.update = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'inferenceruleForm');
+        return false;
+      }
+
+      var inferencerule = $scope.inferencerule;
+
+      inferencerule.$update(function() {
+        $location.path('inferencerules/' + inferencerule._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Inferencerules
+    $scope.find = function() {
+      $scope.inferencerules = InferenceruleFactory.project.query({
+        projectId: ProjectFactory.getProjId()
+      }, function() {});
+    };
+
+    // Find existing Inferencerules
+    $scope.findOne = function() {
+      $scope.inferencerule = InferenceruleFactory.inferencerule.get({
+        inferenceruleId: $stateParams.inferenceruleId
+      });
+    };
+  }
+]);
+
+'use strict';
+
+//Inferencerules service used for communicating with the inferencerules REST endpoints
+angular.module('inferencerules').factory('InferenceruleFactory', ['$resource',
+  function($resource) {
+    return {
+      inferencerule: $resource('api/inferencerules/:inferenceruleId', {
+        inferenceruleId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
       }),
-      project: $resource('api/evidencetypes/project/:projectId', {
+      project: $resource('api/inferencerules/project/:projectId', {
         projectID: '@_id'
       })
     };
@@ -1569,7 +1747,7 @@ angular.module('propcreators').factory('PropcreatorFactory', ['$resource',
 
 // Configuring the Propositions module
 angular.module('propositions').run(['Menus',
-  function (Menus) {
+  function(Menus) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
       title: 'Propositions',
@@ -1586,8 +1764,14 @@ angular.module('propositions').run(['Menus',
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'propositions', {
-      title: 'Create Propositions',
+      title: 'Create Simple Propositions',
       state: 'propositions.create'
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'propositions', {
+      title: 'Create Composite Propositions',
+      state: 'propositions.create-composite'
     });
   }
 ]);
@@ -1596,7 +1780,7 @@ angular.module('propositions').run(['Menus',
 
 // Setting up route
 angular.module('propositions').config(['$stateProvider',
-  function ($stateProvider) {
+  function($stateProvider) {
     $stateProvider
       .state('propositions', {
         abstract: true,
@@ -1611,13 +1795,25 @@ angular.module('propositions').config(['$stateProvider',
         url: '/create',
         templateUrl: 'modules/propositions/client/views/create-proposition.client.view.html'
       })
+      .state('propositions.create-composite', {
+        url: '/create-composite',
+        templateUrl: 'modules/propositions/client/views/create-composite-proposition.client.view.html'
+      })
       .state('propositions.view', {
         url: '/:propositionId',
         templateUrl: 'modules/propositions/client/views/view-proposition.client.view.html'
       })
+      .state('propositions.view-composite', {
+        url: '/composite-proposition/:propositionId',
+        templateUrl: 'modules/propositions/client/views/view-composite-proposition.client.view.html'
+      })
       .state('propositions.edit', {
         url: '/:propositionId/edit',
         templateUrl: 'modules/propositions/client/views/edit-proposition.client.view.html'
+      })
+      .state('propositions.edit-composite', {
+        url: '/:propositionId/edit-composite',
+        templateUrl: 'modules/propositions/client/views/edit-composite-proposition.client.view.html'
       });
   }
 ]);
@@ -1626,10 +1822,10 @@ angular.module('propositions').config(['$stateProvider',
 
 // Propositions controller
 angular.module('propositions').controller('PropositionsController', ['$scope',
-  '$stateParams', '$location', 'Authentication', 'ProjectFactory',
+  '$state', '$stateParams', '$location', 'Authentication', 'ProjectFactory',
   'PropositionFactory', 'ThingFactory', 'PropcreatorFactory',
   'EvidenceFactory', 'JudgementFactory',
-  function($scope, $stateParams, $location, Authentication,
+  function($scope, $state, $stateParams, $location, Authentication,
     ProjectFactory, PropositionFactory, ThingFactory, PropcreatorFactory,
     EvidenceFactory, JudgementFactory) {
     $scope.authentication = Authentication;
@@ -1657,19 +1853,50 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
         return false;
       }
 
-      /* Chong: We don't have judgements stored in the database.
-       * So, we cannot choose one on the page.
-       * Instead, we give the thing id as judgement id here.
-       */
+      // Create new Propositions object
+      var proposition = new PropositionFactory.proposition({
+        title: this.title,
+        type: 'Basic',
+        thing: this.selectedThing._id,
+        project: $scope.projectId,
+        propcreator: this.selectedCreator._id
+      });
+      if (this.selectedEvidence) {
+        proposition.evidences = this.selectedEvidence._id;
+      }
+      if (this.selectedJudgement) {
+        proposition.judgements = this.selectedJudgement._id;
+      }
+      // Redirect after save
+      proposition.$save(function(response) {
+        $location.path('propositions/' + response._id);
+        $scope.title = '';
+        //$scope.selectedThing = null;
+        //TODO: add other forms field
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Create new proposition
+    $scope.createComposite = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propositionForm');
+        return false;
+      }
+
       // Create new Propositions objectG
       var proposition = new PropositionFactory.proposition({
         title: this.title,
-        thing: this.selectedThing._id,
-        project: $scope.projectId,
-        propcreator: this.selectedCreator._id,
-        evidences: this.selectedEvidences._id,
-        judgements: this.selectedThing._id /*Chong: Error*/
+        project: ProjectFactory.getProjId(),
+        firstProposition: this.selectedFirstProposition._id,
+        secondProposition: this.selectedSecondProposition._id,
+        type: 'Composite'
+          //TODO: add others
       });
+      console.log(proposition.title);
 
       // Redirect after save
       proposition.$save(function(response) {
@@ -1710,8 +1937,13 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
       var proposition = $scope.proposition;
       proposition.thing = $scope.selectedThing._id;
       proposition.propcreator = $scope.selectedCreator._id;
-      proposition.evidences = $scope.selectedEvidences._id;
-      proposition.judgements = $scope.selectedJudgements._id;
+      if (typeof(this.selectedEvidence._id) !== 'undefined') {
+        proposition.evidences = this.selectedEvidence._id;
+      }
+      if (typeof(this.selectedJudgement._id) !== 'undefined') {
+        proposition.judgements = this.selectedJudgement._id;
+      }
+
       var foundThing = false;
       proposition.$update(function() {
         $location.path('propositions/' + proposition._id);
@@ -1719,6 +1951,27 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
         $scope.error = errorResponse.data.message;
       });
     };
+
+    // Update existing composite proposition
+    $scope.updateComposite = function(isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'propositionForm');
+        return false;
+      }
+
+      var proposition = $scope.proposition;
+      proposition.firstProposition = $scope.selectedFirstProposition._id;
+      proposition.secondProposition = $scope.selectedSecondProposition._id;
+      proposition.$update(function() {
+        $location.path('propositions/composite-proposition/' +
+          proposition._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
 
     // Find a list of propositions
     $scope.find = function() {
@@ -1731,10 +1984,26 @@ angular.module('propositions').controller('PropositionsController', ['$scope',
     $scope.findOne = function() {
       $scope.proposition = PropositionFactory.proposition.get({
         propositionId: $stateParams.propositionId
-      }, function(resData) {
-        //$scope.selectedThing = resData.thing.title;
-        //$scope.selectedCreator = resData.propcreator.title;
+      }, function(errorResponse) {
+        if ($scope.proposition.type === 'Composite') {
+          $scope.propositions = PropositionFactory.project.query({
+            projectId: $scope.projectId
+          });
+        }
       });
+    };
+
+    $scope.viewPropositionByType = function(proposition) {
+      var pId = proposition._id;
+      if (proposition.type === 'Composite') {
+        $state.go('propositions.view-composite', {
+          propositionId: pId
+        });
+      } else {
+        $state.go('propositions.view', {
+          propositionId: pId
+        });
+      }
     };
   }
 ]);
